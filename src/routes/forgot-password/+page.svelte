@@ -40,7 +40,7 @@
 	};
 </script>
 
-<div class="flex h-[100vh] w-full flex-col justify-center bg-indigo-100 dark:bg-indigo-900">
+<div class="flex h-screen w-full flex-col justify-center bg-slate-100 dark:bg-slate-900">
 	<div
 		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-gray-700"
 	>
