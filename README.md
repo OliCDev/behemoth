@@ -1,5 +1,5 @@
 # behemoth
-I get reeeeeeally freaking tired of writing the same boilerplate code over and over again,so basically this helps me with that. It's called `behemoth` because it's a big boi, and it generates a SvelteKit project with all the things I like to use, like TypeScript, TailwindCSS, Prettier, and more :)
+I get reeeeeeally freaking tired of writing the same boilerplate code over and over again, so basically this helps me with that. It's called `behemoth` because it's a big boi, and it generates a SvelteKit project with all the things I like to use, like TypeScript, TailwindCSS, Prettier, and more :)
 
 Basic logical structure:
 
@@ -9,8 +9,8 @@ behemoth
 	└──  css: [TailwindCSS](https://tailwindcss.com)
 	└── auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
 └── backend:
-	└──  data: Supabase
-		└── database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
+	└──  data: [Supabase](https://supabase.com/)
+		└──  Database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
 		└──  Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime)
 	└──  languages:
 		└──  [Node.JS](https://nodejs.org/en/) (TypeScript), for now
@@ -24,7 +24,18 @@ behemoth
 └── ci/cd:
     └── [Render](https://render.com), for now
 
-
+behemoth
+- frontend:
+	- framework: [SvelteKit](https://kit.svelte.dev)
+	- css: [TailwindCSS](https://tailwindcss.com)
+	-  auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
+- backend:
+	- data:
+		- Database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
+		- Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime)
+	- languages:
+		- [Node.JS](https://nodejs.org/en/) (TypeScript), for now
+		- [GoLang](https://go.dev/), for some cases
 ## Frontend
 ### Framework: SvelteKit 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
