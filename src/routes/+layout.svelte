@@ -21,7 +21,7 @@
 </svelte:head>
 
 <div
-	class="align-center relative flex h-screen overflow-y-scroll w-full flex-col overflow-hidden bg-linear-[80deg] from-indigo-100 from-45% to-indigo-200 bg-fixed lg:from-40% dark:from-indigo-900 dark:to-gray-900"
+	class="align-center relative flex h-screen overflow-y-scroll w-full flex-col overflow-hidden bg-linear-[80deg] from-slate-100 from-45% to-slate-200 bg-fixed lg:from-40% dark:from-slate-900 dark:to-gray-900"
 >
 	{#if user}
 		<Navbar {user} />

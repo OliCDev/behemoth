@@ -8,6 +8,10 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 
+	const dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+	import app_logo from '$lib/assets/img/app_logo.png';
+	import app_logo_dark from '$lib/assets/img/app_logo_dark.png';
+
 	// Svelte
 	import { Alert } from 'flowbite-svelte';
 	import { fade } from 'svelte/transition';
@@ -230,17 +234,24 @@
 
 <!-- Tailwind gradient bg -->
 <div
-	class="flex h-[100vh] w-full flex-col justify-center bg-linear-to-tr from-sky-100 via-white to-sky-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"
+	class="flex h-screen w-full flex-col justify-center bg-linear-to-tr from-sky-100 via-white to-sky-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"
 >
 	<div
 		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-slate-700"
 	>
-		<a href="/">
-			<h1 class="mb-4 text-center text-6xl font-bold text-slate-50">
+  <div class="w-full flex flex-row">
+    <a href="/" class="mb-6 flex flex-row items-center justify-center gap-2 w-full">
+			<h1 class="text-center text-6xl font-bold text-slate-50">
 			B.B
-			🚴
-			</h1></a
-		>
+			</h1>
+			<div
+				class="h-15 w-15 rounded-full bg-contain bg-center bg-no-repeat"
+				style={`background-image: url(${dark_mode ? app_logo_dark : app_logo});`}
+			></div>
+
+		</a>
+  </div>
+
 		{#if login_state.signup_mode}
 			<div class="flex flex-col">
 				<input

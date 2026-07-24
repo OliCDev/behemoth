@@ -11,7 +11,7 @@ Basic structure:
   	- auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
    - components
    - routes
-     	- login/register
+     	- login
       - forgot-password
       - reset-password
       - account:
