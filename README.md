@@ -4,23 +4,23 @@ I get reeeeeeally freaking tired of writing the same boilerplate code over and o
 Basic logical structure:
 
 behemoth
-├── frontend:
-│   ├── framework: [SvelteKit](https://kit.svelte.dev)
-│   ├── css: [TailwindCSS](https://tailwindcss.com)
-│   ├── auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
-├── backend:
-│   ├── data: Supabase
-│   │   └── database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
-│   │   └── Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime)
-│   └── languages:
-│   │   └── [Node.JS](https://nodejs.org/en/) (TypeScript), for now
-│   │   └── [GoLang](https://go.dev/), for some cases
-│   └── storage:
-│   │   └── [Supabase Storage](https://supabase.com/docs/guides/storage), for now
-│   │   └── [AWS buckets](https://aws.amazon.com/s3/), for some cases
-│   └── email:
-│       └── [Resend](https://resend.com) 
-│       └── Email Templates
+└── frontend:
+	└──  framework: [SvelteKit](https://kit.svelte.dev)
+	└──  css: [TailwindCSS](https://tailwindcss.com)
+	└── auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
+└── backend:
+	└──  data: Supabase
+		└── database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
+		└──  Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime)
+	└──  languages:
+		└──  [Node.JS](https://nodejs.org/en/) (TypeScript), for now
+		└──  [GoLang](https://go.dev/), for some cases
+	└──  storage:
+		└──  [Supabase Storage](https://supabase.com/docs/guides/storage), for now
+		└──  [AWS buckets](https://aws.amazon.com/s3/), for some cases
+	└──  email:
+		└──  [Resend](https://resend.com) 
+		└── Email Templates
 └── ci/cd:
     └── [Render](https://render.com), for now
 
@@ -45,7 +45,7 @@ To recreate this project with the same configuration:
 bun x sv@0.16.5 create --template minimal --types ts --add prettier tailwindcss="plugins:typography,forms" --install bun behemoth
 ```
 
-### Developing
+#### Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
@@ -56,7 +56,7 @@ npm run dev
 npm run dev -- --open
 ```
 
-### Building
+#### Building
 
 To create a production version:
 
