@@ -28,5 +28,17 @@
 		"tailwindcss": "^4.3.0",
 		"typescript": "^6.0.3",
 		"vite": "^8.0.16"
+	},
+	"dependencies": {
+		"@supabase/ssr": "^0.12.3",
+		"@supabase/supabase-js": "^2.110.8",
+		"crypto": "^1.0.1",
+		"dayjs": "^1.11.21",
+		"flowbite-svelte": "^1.33.1",
+		"flowbite-svelte-icons": "^3.1.0",
+		"jodit": "^4.13.10",
+		"jwt-decode": "^4.0.0",
+		"sass-embedded": "^1.100.0",
+		"svelte-file-dropzone": "^2.0.9"
 	}
 }

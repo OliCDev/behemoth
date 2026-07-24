@@ -1,0 +1,142 @@
+// SCSS Variables (matching your Tailwind theme)
+$primary-50: #fff5f2;
+$primary-100: #fff1ee;
+$primary-200: #ffe4de;
+$primary-300: #ffd5cc;
+$primary-400: #ffbcad;
+$primary-500: #fe795d;
+$primary-600: #ef562f;
+$primary-700: #eb4f27;
+$primary-800: #cc4522;
+$primary-900: #a5371b;
+
+$secondary-50: #f0f9ff;
+$secondary-100: #e0f2fe;
+$secondary-200: #bae6fd;
+$secondary-300: #7dd3fc;
+$secondary-400: #38bdf8;
+$secondary-500: #0ea5e9;
+$secondary-600: #0284c7;
+$secondary-700: #0369a1;
+$secondary-800: #075985;
+$secondary-900: #0c4a6e;
+
+// Custom SCSS variables
+$dark-bg: #1e293b;
+$light-bg: #f8fafc;
+$border-radius: 0.375rem;
+
+
+// Import flaticon_interface styles
+@use './scss/flaticon/solid_straight.scss';
+@use './scss/flaticon/solid_rounded.scss';
+@use './scss/flaticon/regular_rounded.scss';
+@use './scss/flaticon/brands.scss';
+
+
+// SCSS Mixins
+@mixin button-style($bg-color: $primary-500, $hover-color: $primary-600) {
+  background-color: $bg-color;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: $border-radius;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@mixin card-style {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+
+  .dark & {
+    background: $dark-bg;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Global SCSS styles
+.btn-primary {
+  @include button-style($primary-500, $primary-600);
+}
+
+.btn-secondary {
+  @include button-style($secondary-500, $secondary-600);
+}
+
+.card {
+  @include card-style;
+}
+
+// Nested SCSS example for notes
+.notes-container {
+  .note-item {
+    @include card-style;
+    margin-bottom: 1rem;
+
+    .note-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: $primary-500;
+
+      .dark & {
+        color: $primary-300;
+      }
+    }
+
+    .note-content {
+      color: #64748b;
+
+      .dark & {
+        color: #94a3b8;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+body {
+  font-family: 'DM Sans Variable', sans-serif !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  // box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(248, 248, 250, 0.279);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 248, 250, 0.546);
+}

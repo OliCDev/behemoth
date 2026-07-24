@@ -1,15 +1,31 @@
 # behemoth
 I get reeeeeeally freaking tired of writing the same boilerplate code over and over again, so basically this helps me with that. It's called `behemoth` because it's a big boi, and it generates a SvelteKit project with all the things I like to use, like TypeScript, TailwindCSS, Prettier, and more :)
 
-Basic logical structure:
+Basic structure:
 - frontend:
 	- framework: [SvelteKit](https://kit.svelte.dev)
+  	- language: [TypeScript](https://www.typescriptlang.org)
+    - additional dependencies: `bun add sass-embedded svelte-file-dropzone jodit crypto dayjs flowbite-svelte flowbite-svelte-icons jwt-decode` 
 	- css: [TailwindCSS](https://tailwindcss.com)
-	-  auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
-- backend:
+	- application:
+  	- auth: basic [Supabase auth](https://supabase.com/docs/guides/auth), for now
+   - components
+   - routes
+     	- login/register
+      - forgot-password
+      - reset-password
+      - account:
+        - profile
+        - settings
+        - billing
+    - store
+    - types
+    - utils
+    
+- backend: Supabase - `bun add @supabase/supabase-js @supabase/ssr `
 	- data:
 		- Database: Supabase [Postgres database](https://supabase.com/docs/guides/database)
-		- Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime)
+		- Realtime: Supabase [Realtime server](https://supabase.com/docs/guides/realtime) `bun add @supabase/realtime-js`
 	- languages:
 		- [Node.JS](https://nodejs.org/en/) (TypeScript), for now
 		- [GoLang](https://go.dev/), for some cases
@@ -21,7 +37,7 @@ Basic logical structure:
       - Email Templates
 - devops
   - ci/cd:
-    - [Render](https://render.com), for now
+    - [Render](https://render.com), for now. `bun add resend`
 
 ## Frontend
 ### Framework: SvelteKit 
@@ -64,12 +80,26 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy, install [adapter](https://svelte.dev/docs/kit/adapters) for your Render.
+> To deploy, install [adapter](https://svelte.dev/docs/kit/adapters) for Render: `bun add @sveltejs/adapter-node`
 
-### CSS: TailwindCSS
-If you've followed the steps above, you should have TailwindCSS installed and configured. You can start using it in your Svelte components right away.
+### CSS: 
 
-### Auth: Supabase
+#### TailwindCSS:
+If you've followed the steps above, you should have TailwindCSS installed and configured. You can start using it in your Svelte components right away. You can go ahead and slap tailwind into your `app.css` or `app.scss` file.
+
+#### Jodit
+My fave WYSIWYG editor. I use it for the admin panel, and it's great for writing content. Shove its styles in `app.html`:
+
+```html
+  <link rel="stylesheet" href="https://unpkg.com/jodit@4.7.6/es2021/jodit.fat.min.css" />
+  <script src="https://unpkg.com/jodit@4.7.6/es2021/jodit.fat.min.js"></script>
+```
+
+### Auth: 
+
+#### Supabase
+
+
 
 ## Backend
 
