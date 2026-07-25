@@ -1,9 +1,17 @@
 <script lang="ts">
 
-
- 	const dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-	import app_logo from '$lib/assets/img/app_logo.png';
+  // Imports
+  import { browser } from '$app/environment';
+  import app_logo from '$lib/assets/img/app_logo.png';
 	import app_logo_dark from '$lib/assets/img/app_logo_dark.png';
+
+
+	// State
+ 	let dark_mode : boolean = false;
+  if(browser) {
+     dark_mode = window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
 </script>
 
 <div class="h-screen w-screen bg-slate-600 flex flex-col justify-center items-center">
