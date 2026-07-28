@@ -7,6 +7,7 @@
 
 
 	// State
+ 	// svelte-ignore non_reactive_update
  	let dark_mode : boolean = false;
   if(browser) {
      dark_mode = window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches;

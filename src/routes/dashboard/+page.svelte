@@ -22,6 +22,7 @@
 		friends = $derived(data?.friends);
 
 	// Debug:
+	// svelte-ignore state_referenced_locally
 	console.log('Dashboard - User:', user);
 	// console.log('Dashboard - Friends:', friends);
 

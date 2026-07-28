@@ -1,1 +1,1 @@
-export const containerClasses = "max-w-[98vw] md:max-w-[90vw] mx-auto flex min-h-screen w-full flex-col justify-start gap-4 p-2 lg:p-4 pb-30 p-4 md:py-32 md:left-28 lg:absolute mt-0 lg:mt-[30px]  3xl:static ";
+export const containerClasses = "w-full lg:w-2/3 mx-auto mt-20 h-screen flex flex-col gap-4 p-4";

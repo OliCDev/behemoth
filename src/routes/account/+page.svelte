@@ -13,6 +13,9 @@
 	} from 'flowbite-svelte';
 	import Dropzone from 'svelte-file-dropzone';
 
+	// Utils
+	import { containerClasses } from '$lib/utils/style';
+
 	import { page } from '$app/stores';
 
 	// Data
@@ -20,6 +23,7 @@
 	import { countries } from '$lib/assets/data/countries';
 	import { states } from '$lib/assets/data/states';
 	// Debug:
+	// svelte-ignore state_referenced_locally
 	console.log('Account page - User:', user);
 	// console.log('Account page - Supabase client:', supabase);
 
@@ -141,7 +145,7 @@
 		}
 		// console.log('Public URL: ', urlData.publicUrl);
 		state.pfp.url = urlData.publicUrl || '';
-		metadata_state.pfp = urlData.publicUrl || '';
+		metadata_state.pfp_url = urlData.publicUrl || '';
 		// update user account with new pfp url
 		// await update_user_pfp();
 	};
@@ -164,7 +168,7 @@
 	};
 </script>
 
-<div class="w-full lg:w-2/3 mx-auto mt-20 h-screen  flex flex-col gap-4 p-4">
+<div class={containerClasses}>
   <div class="bg-white/60 p-0 shadow-xl dark:bg-white/10 rounded-md flex flex-col justify-start items-center overflow-hidden">
     <div class="w-full flex flex-col md:flex-row pt-4 lg:pt-8 px-4 lg:px-8">
       <div class="h-30 w-30 flex flex-col justify-start items-center md:mb-8">
@@ -219,23 +223,34 @@
       {/each}
     </div>
   </div>
-  <div class="bg-white/60 p-6 shadow-xl dark:bg-white/10 rounded-md">
+  <div class="bg-white/60 p-8 shadow-xl dark:bg-white/10 rounded-md">
     {#if metadata_state.current_tab === 'General'}
-      <div class="flex flex-col gap-4 w-full lg:w-[70%] mx-auto mt-10 mb-20">
+      <div class="flex flex-col gap-4 w-full lg:w-[70%] mt-10 mb-20">
         <!-- Personal -->
         <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">
           <div class="w-full lg:w-1/4 flex flex-col justify-start items-start p-2">
             <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Personal Information</h3>
           </div>
           <div class="w-full lg:w-3/4 flex flex-col">
-            <div class="w-full lg:w-2/3 flex flex-col justify-start items-start gap-1">
-              <Label>Username</Label>
-              <input
-                id="username"
-                type="text"
-                bind:value={metadata_state.username}
-                class={`${input_class} mb-4`}
-              />
+            <div class="w-full flex flex-col lg:flex-row gap-4 mb-4">
+              <div class="w-full lg:w-2/3 flex flex-col justify-start items-start gap-1">
+                <Label>Username</Label>
+                <input
+                  id="username"
+                  type="text"
+                  bind:value={metadata_state.username}
+                  class={`${input_class} mb-4`}
+                />
+              </div>
+              <div class="w-full lg:w-1/3 flex flex-col justify-start items-start gap-1">
+                <Label>Pronouns</Label>
+                <input
+                  id="pronouns"
+                  type="text"
+                  bind:value={metadata_state.pronouns}
+                  class={`${input_class} mb-4`}
+                />
+              </div>
             </div>
             <div class="w-full flex flex-col lg:flex-row gap-4 mb-4">
               <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
