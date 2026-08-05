@@ -10,8 +10,9 @@ export type UserAddress = {
   state: string;
   postal_code: string;
   country: string;
-  created_at: string;
-  updated_at: string;
+  primary: boolean;
+  created_at: string | null;
+  updated_at: string | null;
 };
 
 export type UserPaymentMethod = {
@@ -21,6 +22,7 @@ export type UserPaymentMethod = {
   card_last4: string;
   card_exp_month: number;
   card_exp_year: number;
+  primary: boolean;
   created_at: string;
   updated_at: string;
 };

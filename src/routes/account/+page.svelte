@@ -81,6 +81,7 @@
         address: {
           open: false,
           item: {
+            id: null,
             user_id: userStore.appUser?.id || '',
             label: '',
             address_line1: '',
@@ -491,7 +492,7 @@
                 <button
                   aria-label="Add new address"
                   id="btn-add_new_address"
-                  class="w-full h-full cursor-pointer"
+                  class="w-full h-full cursor-pointer min-h-37"
                   onclick={() => {
                     account_state.create.address.open = !account_state.create.address.open;
                   }}
@@ -503,7 +504,7 @@
                   bind:open={account_state.create.address.open}
                   size="lg"
                 >
-                  <div class="w-full flex flex-col justify-center items-start px-8 pb-8">
+                  <div class="w-full min-h-37 flex flex-col justify-center items-start px-8 pb-8">
                     <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
                       Add New Address
                     </h3>
@@ -511,7 +512,7 @@
                     <AddressForm address={account_state.create.address.item} />
                     <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
                       <button
-                        class="rounded-md cursor-pointer bg-neutral-300 px-4 py-2 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                        class="rounded-md  cursor-pointer bg-neutral-300 px-4 py-2 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
                         onclick={() => {
                           account_state.create.address.open = false;
                         }}
