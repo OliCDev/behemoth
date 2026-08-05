@@ -10,7 +10,17 @@
 
 	// Access the current logged-in user and session
 	const session = $derived(data.session);
+	const supabase = $derived(data.supabase);
 	const user = $derived(session?.user);
+
+	// Store
+	import { setUserStore } from '$lib/stores/user.svelte';
+	// svelte-ignore state_referenced_locally
+	const userStore = setUserStore(supabase, data.user)
+	$effect(() => {
+		userStore.load();
+		const ch = userStore.subscribeRealtime(); return () => ch?.unsubscribe();
+	});
 
 	// Components
 	import Navbar from '$lib/components/template/Navbar.svelte';

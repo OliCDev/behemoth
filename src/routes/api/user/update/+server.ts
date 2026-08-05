@@ -37,6 +37,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     return json({ success: false, error: friendsError.message }, { status: 500 });
   }
 
- 
+
   return json({ success: true, user }, { status: 200 });
 };

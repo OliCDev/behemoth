@@ -17,6 +17,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         username,
         email,
         pfp: default_pfp,
+        first_name: '',
+        last_name: '',
+        phone_number: '',
         pronouns: '',
         admin: false,
         invitation: {
@@ -24,7 +27,16 @@ export const POST: RequestHandler = async ({ request, locals }) => {
           email: '',
           accepted: false
         },
-        reset_token: ''
+        reset_token: '',
+        subscription_plan: {
+          id: 1,
+          name: 'Free',
+          description: 'Free plan with limited features',
+          price: 0,
+          currency: 'USD',
+          billing_interval: 'month',
+          created_at: new Date().toISOString(),
+        },
       },
     },
   });

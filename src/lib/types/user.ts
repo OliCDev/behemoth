@@ -3,6 +3,7 @@ import type { User } from '@supabase/supabase-js';
 export type UserAddress = {
   id: string;
   user_id: string;
+  label: string;
   address_line1: string;
   address_line2?: string;
   city: string;
@@ -24,7 +25,7 @@ export type UserPaymentMethod = {
   updated_at: string;
 };
 
-export type AppPlan = {
+export type AppSubscription = {
   id: string;
   name: string;
   description: string;
