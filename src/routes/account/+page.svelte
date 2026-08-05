@@ -381,6 +381,31 @@
                     <div class="w-full flex flex-row gap-2">
                       <div class="flex flex-1"></div>
                       <!-- Primary -->
+                      {#if  address.primary}
+                        <Tooltip triggeredBy={`#primary-${index}`}>Primary address</Tooltip>
+                        <button
+                          aria-label="Primary address"
+                          class="text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400 cursor-pointer"
+                        >
+                          <i id={`primary-${index}`} class="fi fi-ss-heart text-green-400 hover:text-green-500"></i>
+                        </button>
+                        {:else}
+                        <Tooltip triggeredBy={`#primary-${index}`}>Set as primary address</Tooltip>
+                        <button
+                          aria-label="Set as primary address"
+                          class="text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400 cursor-pointer"
+                          onclick={() => {
+                            if(userStore.appUser) {
+                              userStore.appUser.addresses?.forEach((addr, i) => {
+                                addr.primary = (i === index);
+                              });
+                            }
+                          }}
+                        >
+                          <i id={`primary-${index}`} class="fi fi-ss-heart text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400"></i>
+                        </button>
+                      {/if}
+
                       <!-- Edit -->
                       <button
                         aria-label="Edit address"
