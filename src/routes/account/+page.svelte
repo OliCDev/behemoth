@@ -84,6 +84,7 @@
             id: null,
             user_id: userStore.appUser?.id || '',
             label: '',
+            primary: false,
             address_line1: '',
             address_line2: '',
             city: '',
@@ -379,6 +380,7 @@
                   <div class={account_card_class}>
                     <div class="w-full flex flex-row gap-2">
                       <div class="flex flex-1"></div>
+                      <!-- Primary -->
                       <!-- Edit -->
                       <button
                         aria-label="Edit address"
