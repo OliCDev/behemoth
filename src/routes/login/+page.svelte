@@ -7,8 +7,9 @@
 	// import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 
-	const dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+	const dark_mode = browser && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 	import app_logo from '$lib/assets/img/app_logo.png';
 	import app_logo_dark from '$lib/assets/img/app_logo_dark.png';
 	import { Swords } from 'lucide-svelte'
