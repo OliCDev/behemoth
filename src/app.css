@@ -61,3 +61,25 @@
     display: none;
   }
 }
+
+
+/*Fonts */
+@font-face {
+  font-family: 'Zalando';
+  src: url('/assets/fonts/zalando_sans/Zalando_Sans/ZalandoSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Zalando';
+  src: url('/assets/fonts/zalando_sans/Zalando_Sans/ZalandoSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+.font-primary {
+  font-family: 'Zalando', sans-serif;
+}

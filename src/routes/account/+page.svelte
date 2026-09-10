@@ -170,8 +170,8 @@
 
   // functions
   // -- UI
-  const input_class = "w-full rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
-  const account_card_class = "w-full flex flex-col justify-start items-start gap-1 p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-slate-100 from-15% to-slate-200 bg-fixed lg:from-10% lg:to-60% dark:from-slate-400 dark:to-gray-900"
+  const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
+  const account_card_class = "w-full flex flex-col justify-start items-start gap-1 p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-200 bg-fixed lg:from-10% lg:to-60% dark:from-mist-400 dark:to-gray-900"
   const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-center items-center"
   // -- Profile Picture Upload
 	const handle_pfp_drop = async (event: CustomEvent) => {
@@ -248,7 +248,7 @@
         <Dropzone
 					id="upload_pfp"
 					on:drop={handle_pfp_drop}
-					class="flex w-full h-full cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-sky-400 bg-white bg-cover bg-center dark:bg-neutral-800"
+					class="flex w-full h-full cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-amber-400 bg-white bg-cover bg-center dark:bg-neutral-800"
 					accept="image/*"
 					maxFiles={1}
 					style={`background-image: url(${user?.user_metadata?.pfp_url || default_pfp}); background-size: cover; background-position: center;`}
@@ -281,13 +281,13 @@
       </div>
       <div class="flex flex-col p-4 justify-center items-start ">
         <h3 class="text-neutral-800 dark:text-neutral-200">{ user?.user_metadata?.first_name } { user?.user_metadata?.last_name }</h3>
-        <h4 class="text-slate-700 dark:text-slate-400">{user?.user_metadata?.email }</h4>
+        <h4 class="text-mist-700 dark:text-mist-400">{user?.user_metadata?.email }</h4>
       </div>
     </div>
-    <div class="flex flex-row w-full border-t-slate-300  dark:border-t-slate-600 border-t overflow-hidden">
+    <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">
       {#each account_state.tabs as tab}
         <button
-          class="flex-1 lg:min-h-8.75 overflow-hidden py-2 text-center text-sm lg:text-md text-neutral-800 dark:text-neutral-200 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
+          class="flex-1 lg:min-h-8.75 overflow-hidden py-2 text-center text-sm lg:text-md text-neutral-800 dark:text-neutral-200 hover:bg-mist-200 dark:hover:bg-mist-700 cursor-pointer"
           class:font-bold={account_state.current_tab === tab.name}
           onclick={() => (account_state.current_tab = tab.name)}
         >
@@ -409,7 +409,7 @@
                       <!-- Edit -->
                       <button
                         aria-label="Edit address"
-                        class="text-neutral-600 dark:text-neutral-400 hover:text-sky-500 dark:hover:sky-red-400 cursor-pointer"
+                        class="text-neutral-600 dark:text-neutral-400 hover:text-amber-500 dark:hover:sky-red-400 cursor-pointer"
                         onclose={() => {
                           account_state.edit.address.open = false;
                           account_state.edit.address.item = null;
@@ -419,7 +419,7 @@
                           account_state.edit.address.open = !account_state.create.address.open;
                         }}
                       >
-                        <i class="fi fi-ss-edit text-sky-400 hover:text-sky-500"></i>
+                        <i class="fi fi-ss-edit text-amber-400 hover:text-amber-500"></i>
                       </button>
                       <Modal
                         bind:open={account_state.edit.address.open}
@@ -429,7 +429,7 @@
                           <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
                             Edit "{account_state.edit.address.item?.label}"
                           </h3>
-                          <hr class="w-full mb-8 h-px bg-slate-700 dark:bg-slate-300 border-t-slate-300  dark:border-t-slate-600 border-t ">
+                          <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
                           {#if account_state.edit.address.item}
                             <AddressForm address={account_state.edit.address.item} />
                           {/if}
@@ -444,7 +444,7 @@
                               Cancel
                             </button>
                             <button
-                              class="rounded-md cursor-pointer bg-sky-500 px-4 py-2 text-white hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700"
+                              class="rounded-md cursor-pointer bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
                               onclick={() => {
                                 account_state.edit.address.open = false;
                                 account_state.edit.address.item = null;
@@ -524,7 +524,7 @@
                     account_state.create.address.open = !account_state.create.address.open;
                   }}
                 >
-                  <i class="fi fi-ss-plus text-sky-400 hover:text-sky-500 text-2xl"></i>
+                  <i class="fi fi-ss-plus text-amber-400 hover:text-amber-500 text-2xl"></i>
                 </button>
                 <Tooltip triggeredBy="#btn-add_new_address">Add a new address</Tooltip>
                 <Modal
@@ -535,7 +535,7 @@
                     <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
                       Add New Address
                     </h3>
-                    <hr class="w-full mb-8 h-px bg-slate-700 dark:bg-slate-300 border-t-slate-300  dark:border-t-slate-600 border-t ">
+                    <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
                     <AddressForm address={account_state.create.address.item} />
                     <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
                       <button
@@ -547,7 +547,7 @@
                         Cancel
                       </button>
                       <button
-                        class="rounded-md cursor-pointer bg-sky-500 px-4 py-2 text-white hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700"
+                        class="rounded-md cursor-pointer bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
                         onclick={() => {
                           if(userStore.appUser && account_state.create.address.item) {
                             userStore.appUser.addresses?.push(account_state.create.address.item);
@@ -647,7 +647,7 @@
           <div class="flex flex-1"></div>
           <div class="w-full lg:w-3/4">
             <button
-              class="rounded-md cursor-pointer w-full bg-sky-500 px-4 py-2 text-white hover:bg-sky-600 dark:bg-sky-600 dark:hover:bg-sky-700"
+              class="rounded-md cursor-pointer w-full bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
               onclick={() => console.log('Save changes clicked')}
             >
               Save Changes

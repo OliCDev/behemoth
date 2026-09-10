@@ -40,7 +40,7 @@
 	};
 </script>
 
-<div class="flex h-screen w-full flex-col justify-center bg-slate-100 dark:bg-slate-900">
+<div class="flex h-screen w-full flex-col justify-center bg-mist-100 dark:bg-mist-900">
 	<div
 		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-gray-700"
 	>
@@ -53,7 +53,7 @@
 				bind:value={forgot_password_state.email}
 				type="email"
 				placeholder="Email"
-				class="my-4 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+				class="my-4 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 			/>
 			<button
 				class="mt-2 cursor-pointer rounded-md bg-sky-600 p-2 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"

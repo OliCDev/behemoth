@@ -11,6 +11,7 @@
 
 	// Icons
 	import { ArrowRightToBracketOutline } from 'flowbite-svelte-icons';
+	import { Swords } from 'lucide-svelte'
 
 	// Components
 	import { DarkMode, Tooltip } from 'flowbite-svelte';
@@ -58,14 +59,15 @@
 <nav>
 <div
 	id="navbar-mobile"
-	class="visible fixed bottom-0 z-50 flex w-full flex-row items-center justify-center bg-slate-200 px-6 py-2 lg:invisible dark:bg-slate-800"
+	class="visible fixed bottom-0 z-50 flex w-full flex-row items-center justify-center bg-mist-200 px-6 py-2 lg:invisible dark:bg-mist-800"
 >
 	<div class="align-center flex flex-1 items-center justify-center gap-6">
 		<a href="/dashboard" aria-label="Dashboard" title="Dashboard">
-			<div
+		  <Swords size={20}  color="red" strokeWidth={2} />
+			<!-- <div
 				class="-mt-1.5 h-8 w-8 rounded-full"
 				style={`background-image: url(${dark_mode ? app_logo_dark : app_logo}); background-size: contain; background-position: center; background-repeat: no-repeat;`}
-			></div>
+			></div> -->
 		</a>
 
 
@@ -98,7 +100,7 @@
 		<div
 			in:fade
 			out:fade={{ duration: 400 }}
-			class="absolute right-5 bottom-18 flex w-[40vw] flex-col rounded-lg bg-slate-300/90 p-4 text-neutral-800 dark:bg-slate-800/90 dark:text-neutral-200"
+			class="absolute right-5 bottom-18 flex w-[40vw] flex-col rounded-lg bg-mist-300/90 p-4 text-neutral-800 dark:bg-mist-800/90 dark:text-neutral-200"
 		>
 			<div class="flex w-full flex-row items-center justify-end">
 				Light/Dark
@@ -129,15 +131,16 @@
 <div
 	id="navbar-desktop"
 	class="align-center invisible fixed top-0 left-0 flex h-full w-18.75 flex-col justify-center gap-4 bg-linear-to-b
-    from-slate-200 to-slate-100 p-4 lg:visible dark:from-slate-800 dark:to-slate-900
+    from-mist-200 to-mist-100 p-4 lg:visible dark:from-mist-800 dark:to-mist-900
   "
 >
 	<div class="mt-8 flex flex-col items-center py-4">
 		<a href="/dashboard" aria-label="Dashboard" title="Dashboard" class="mb-8" id="link-dashboard">
-			<div
+		<Swords size={30}  color="red" strokeWidth={2} />
+			<!-- <div
 				class="h-15 w-15 rounded-full bg-contain bg-center bg-no-repeat"
 				style={`background-image: url(${dark_mode ? app_logo_dark : app_logo});`}
-			></div>
+			></div> -->
 			<Tooltip placement="bottom" triggeredBy="#link-dashboard">Dashboard</Tooltip>
 		</a>
 

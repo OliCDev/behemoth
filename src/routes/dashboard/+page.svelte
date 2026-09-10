@@ -26,7 +26,7 @@
 	console.log('Dashboard - User:', user);
 	// console.log('Dashboard - Friends:', friends);
 
-	const app_name = 'Behemoth Bikes';
+	const app_name = 'Behemoth Battle School';
 
 	// Stores
 
@@ -177,7 +177,7 @@
 				body: JSON.stringify({
 					email: dashboard_state.invite.email,
 					invited_by: user?.id,
-					invited_by_name: user?.user_metadata?.first_name ?? 'A biker'
+					invited_by_name: user?.user_metadata?.first_name ?? 'A warrior'
 				})
 			});
 			const data = await response.json();
@@ -235,7 +235,7 @@
 			class="mx-2 mt-6 text-3xl font-bold text-neutral-600 md:text-6xl lg:text-9xl dark:text-neutral-200"
 		>
 			Hello,
-			<span class="lowercase">{user?.user_metadata?.first_name || 'biker'}!</span>
+			<span class="lowercase">{user?.user_metadata?.first_name || 'warrior'}!</span>
 		</h1>
 		<p class="m-2 text-2xl font-thin text-neutral-600 md:text-6xl dark:text-neutral-200">
 			{dashboard_state.clock}

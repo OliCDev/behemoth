@@ -11,6 +11,7 @@
 	const dark_mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 	import app_logo from '$lib/assets/img/app_logo.png';
 	import app_logo_dark from '$lib/assets/img/app_logo_dark.png';
+	import { Swords } from 'lucide-svelte'
 
 	// Svelte
 	import { Alert } from 'flowbite-svelte';
@@ -200,7 +201,7 @@
 			if (!err?.includes(`TypeError: Cannot read properties of undefined (reading 'split')`)) {
 				login_state.error = `An error occurred during sign in: ${error}`;
 			} else {
-				login_state.success = 'Welcome back, podster!';
+				login_state.success = 'Welcome back, warrior!';
 				login_state.logged_in = true;
 				window.location.href = '/dashboard';
 			}
@@ -234,20 +235,17 @@
 
 <!-- Tailwind gradient bg -->
 <div
-	class="flex h-screen w-full flex-col justify-center bg-linear-to-tr from-sky-100 via-white to-sky-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800"
+	class="flex h-screen w-full flex-col justify-center bg-linear-to-tr from-amber-100 via-white to-amber-200 dark:from-mist-800 dark:via-mist-900 dark:to-mist-800"
 >
 	<div
-		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-slate-700"
+		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-mist-700"
 	>
   <div class="w-full flex flex-row">
     <a href="/" class="mb-6 flex flex-row items-center justify-center gap-2 w-full">
-			<h1 class="text-center text-6xl font-bold text-slate-50">
-			B.B
+			<h1 class="text-center text-6xl font-bold text-mist-50">
+			B.B.S.
 			</h1>
-			<div
-				class="h-15 w-15 rounded-full bg-contain bg-center bg-no-repeat"
-				style={`background-image: url(${dark_mode ? app_logo_dark : app_logo});`}
-			></div>
+			<Swords size={36}  color="red" strokeWidth={2} />
 
 		</a>
   </div>
@@ -262,7 +260,7 @@
 					}}
 					type="text"
 					placeholder={`Your name (e.g. ${randomNameGenerator()})`}
-					class="mb-2 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 				/>
 				<input
 					name="email"
@@ -272,7 +270,7 @@
 					}}
 					type="email"
 					placeholder="Email"
-					class="mb-2 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 				/>
 
 				<input
@@ -283,7 +281,7 @@
 					}}
 					type="password"
 					placeholder="Password"
-					class="mb-2 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 				/>
 				<input
 					name="address_line_1"
@@ -293,11 +291,11 @@
 					}}
 					type="password"
 					placeholder="Please confirm your password"
-					class="mb-2 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 				/>
 
 				<button
-					class="mt-4 cursor-pointer rounded-md bg-sky-600 p-2 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+					class="mt-4 cursor-pointer rounded-md bg-amber-600 p-2 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
 					onclick={signUp}
 					disabled={login_state.posting}
 				>
@@ -320,10 +318,10 @@
 				{/if}
 			</div>
 			<div class="flex w-full flex-col text-center">
-				<p class="mt-4 text-slate-600 dark:text-slate-300">
+				<p class="mt-4 text-mist-600 dark:text-mist-300">
 					Already have an account?
 					<button
-						class="cursor-pointer text-slate-800 underline hover:text-slate-600 dark:text-slate-200 dark:hover:text-slate-400"
+						class="cursor-pointer text-mist-800 underline hover:text-mist-600 dark:text-mist-200 dark:hover:text-mist-400"
 						onclick={() => (login_state.signup_mode = false)}
 					>
 						Sign in
@@ -340,14 +338,14 @@
 					onkeydown={(e) => {
 						login_state.error = '';
 					}}
-					class="mb-2 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 				/>
 				<input
 					name="password"
 					bind:value={login_state.user_creds.password}
 					type="password"
 					placeholder="Password"
-					class="cursor-pointer rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+					class="cursor-pointer rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 					onkeydown={(e) => {
 						login_state.error = '';
 						if (e.key === 'Enter') {
@@ -357,7 +355,7 @@
 				/>
 				<button
 					onclick={signIn}
-					class="mt-4 cursor-pointer rounded-md bg-sky-600 p-2 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+					class="mt-4 cursor-pointer rounded-md bg-amber-600 p-2 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
 				>
 					Sign In
 				</button>
@@ -386,20 +384,20 @@
 				{/if}
 			</div>
 			<div class="flex w-full flex-col text-center">
-				<p class="mt-4 text-slate-600 dark:text-slate-300">
+				<p class="mt-4 text-mist-600 dark:text-mist-300">
 					Don't have an account?
 					<button
-						class="cursor-pointer text-slate-800 underline hover:text-slate-600 dark:text-slate-200 dark:hover:text-slate-400"
+						class="cursor-pointer text-mist-800 underline hover:text-mist-600 dark:text-mist-200 dark:hover:text-mist-400"
 						onclick={() => (login_state.signup_mode = true)}
 					>
 						Sign up here.
 					</button>
 				</p>
-				<p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+				<p class="mt-2 text-xs text-mist-600 dark:text-mist-300">
 					Forgot your password? No worries!
 					<a
 						href="/forgot-password"
-						class="cursor-pointer text-slate-800 underline hover:text-slate-600 dark:text-slate-200 dark:hover:text-slate-400"
+						class="cursor-pointer text-mist-800 underline hover:text-mist-600 dark:text-mist-200 dark:hover:text-mist-400"
 					>
 						Reset here.
 					</a>

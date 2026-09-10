@@ -58,12 +58,12 @@
 	};
 </script>
 
-<div class="flex h-screen w-full flex-col justify-center bg-slate-100 dark:bg-slate-900">
+<div class="flex h-screen w-full flex-col justify-center bg-mist-100 dark:bg-mist-900">
 	<div
-		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-slate-700"
+		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-mist-700"
 	>
 		<div class="flex flex-col">
-			<p class="text-slate-800 dark:text-slate-200">
+			<p class="text-mist-800 dark:text-mist-200">
 				Please enter your new password below to reset your account password.
 			</p>
 			<input
@@ -71,14 +71,14 @@
 				bind:value={reset_password_state.password}
 				type="password"
 				placeholder="New Password"
-				class="my-4 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+				class="my-4 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 			/>
 			<input
 				name="confirm_password"
 				bind:value={reset_password_state.confirm_password}
 				type="password"
 				placeholder="Confirm New Password"
-				class="mb-4 rounded-md border border-slate-300 p-2 focus:border-slate-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:focus:border-slate-400"
+				class="mb-4 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 			/>
 			<button
 				onclick={() => resetPassword()}
