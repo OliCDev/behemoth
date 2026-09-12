@@ -83,6 +83,14 @@ out
 dist
 .output
 
+# Sveltekit build / generate output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js

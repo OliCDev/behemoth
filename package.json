@@ -34,7 +34,7 @@
 		"@supabase/realtime-js": "^2.105.4",
 		"@supabase/ssr": "^0.10.3",
 		"@supabase/supabase-js": "^2.105.4",
-		"@sveltejs/adapter-node": "^5.5.4",
+		"@sveltejs/adapter-node": "^5.5.7",
 		"crypto": "^1.0.1",
 		"dayjs": "^1.11.20",
 		"flowbite-svelte": "^1.33.1",
