@@ -19,22 +19,27 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   console.log('New metadata to save:', user?.user_metadata);
 
-  // Update friends table with new metadata
-  const { error: friendsError } = await locals.supabase
-    .from('friends')
+  // Update member table with new metadata
+  const { error: membersError } = await locals.supabase
+    .from('members')
     .update({
       username: newMetadata?.username,
       pfp: newMetadata?.pfp,
+      admin: newMetadata?.admin,
       metadata: {
         pronouns: newMetadata?.pronouns,
-        pfp: newMetadata?.pfp
+        pfp: newMetadata?.pfp,
+        admin: newMetadata?.admin,
+        first_name: newMetadata?.first_name,
+        last_name: newMetadata?.last_name,
+        phone_number: newMetadata?.phone_number
       }
     })
     .eq('member', user?.id);
 
-  if (friendsError) {
-    console.error('Error updating friends table:', friendsError);
-    return json({ success: false, error: friendsError.message }, { status: 500 });
+  if (membersError) {
+    console.error('Error updating friends table:', membersError);
+    return json({ success: false, error: membersError.message }, { status: 500 });
   }
 
 

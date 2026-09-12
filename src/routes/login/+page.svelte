@@ -385,7 +385,7 @@
 				{/if}
 			</div>
 			<div class="flex w-full flex-col text-center">
-				<p class="mt-4 text-mist-600 dark:text-mist-300">
+				<!-- <p class="mt-4 text-mist-600 dark:text-mist-300">
 					Don't have an account?
 					<button
 						class="cursor-pointer text-mist-800 underline hover:text-mist-600 dark:text-mist-200 dark:hover:text-mist-400"
@@ -393,7 +393,7 @@
 					>
 						Sign up here.
 					</button>
-				</p>
+				</p> -->
 				<p class="mt-2 text-xs text-mist-600 dark:text-mist-300">
 					Forgot your password? No worries!
 					<a

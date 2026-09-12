@@ -22,10 +22,10 @@
     <a href="/login" class="flex flex-row justify-center items-center my-8">
       <span class="text-mist-50 text-lg m-0 p-0">Login</span>
     </a>
-    <span class="text-mist-50 text-lg m-0 p-0">|</span>
+    <!-- <span class="text-mist-50 text-lg m-0 p-0">|</span>
     <a href="/login?signup=true" class="flex flex-row justify-center items-center my-8">
       <span class="text-mist-50 text-lg m-0 p-0">Sign up</span>
-    </a>
+    </a> -->
     <div class="flex"></div>
   </div>
 

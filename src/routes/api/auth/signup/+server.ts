@@ -28,6 +28,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
           accepted: false
         },
         reset_token: '',
+        member: false,
         subscription_plan: {
           id: 1,
           name: 'Free',
@@ -42,7 +43,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   });
 
   if (error) {
-    return json({ success: false, error: error.message }, { status: 400 });
+    console.error('Error signing up user:', error, 'Message', error.message);
+    return json({ success: false, error: `Error signing up user: ${error} ${error.message}` }, { status: 400 });
   }
 
   const { session } = data;
@@ -51,6 +53,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   // console.log('Signup - User:', user);
 
   const { data: { user } } = await locals.supabase.auth.getUser();
+  console.log('Signup - User:', user);
 
   // If no session, user needs to confirm email
   if (!session) {
@@ -62,6 +65,22 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       user
     });
   }
+
+  // Create new db entry for user in the 'members' table:
+  const { error: membersError } = await locals.supabase
+    .from('members')
+    .insert({
+      user_id: user?.id,
+      admin: false,
+      pfp: default_pfp,
+      metadata: user?.user_metadata,
+    })
+
+  if (membersError) {
+    console.error('Error inserting into members table:', membersError);
+    return json({ success: false, error: membersError.message }, { status: 500 });
+  }
+
 
   // Cookies are automatically set by the supabase client
   // The middleware will populate locals.user and locals.session on subsequent requests
