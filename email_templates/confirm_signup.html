@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <body style="margin:0; padding:0; background:#f4f4f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-family:Arial, sans-serif;">
+      <tr>
+        <td align="center" style="padding: 30px 15px;">
+
+          <!-- Card -->
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 500px; background:#ffffff; border-radius:10px; overflow:hidden;">
+
+            <!-- Header -->
+            <tr>
+              <td align="center" style="background:#fc0d00; padding:25px;">
+                <img src="https://behemoth.olic.dev/assets/img/bbs_logo.webp" alt="BBS Logo" width="80" style="display:block; margin-bottom:10px; border-radius: 15%;" />
+                <h1 style="color:#ffffff; margin:0; font-size:22px; font-weight:600;">
+                  Confirm Your Email
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 30px; color:#333333; font-size:15px; line-height:1.6;">
+                <p>Hello, friend!</p>
+                <p>Thank you for joining Behemoth Battle School! Please click the button below to verify your email to hop on the app.</p>
+
+                <!-- CTA Button -->
+                <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 25px auto;">
+                  <tr>
+                    <td align="center" style="background:#312c85; padding:14px 30px; border-radius:6px;">
+                      <a href="{{ .ConfirmationURL }}"
+                         style="color:white; text-decoration:none; font-size:16px; font-weight:bold;">
+                        Verify Email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p>If the button doesn’t work, paste this link in your browser:</p>
+                <p style="word-break:break-all; color:#00598a;">
+                  {{ .ConfirmationURL }}
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td align="center" style="background:#312c85; padding:15px; font-size:12px; color:#ffffff;">
+                Sent with ❤️
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

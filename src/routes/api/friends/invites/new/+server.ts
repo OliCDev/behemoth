@@ -4,10 +4,10 @@ import type { RequestHandler } from '@sveltejs/kit';
 // Resend:
 import { Resend } from 'resend';
 import { RESEND_API_KEY } from '$env/static/private';
- 
 
-// import logo from '$lib/assets/img/tfnb_logo.png'
-const logo = 'https://foodnotbombs-tpa.app/assets/img/tfnb_logo.png', // Absolute URL for email embedding
+
+// import logo from '$lib/assets/img/bbs_logo.webp'
+const logo = 'https://foodnotbombs-tpa.app/assets/img/bbs_logo.webp', // Absolute URL for email embedding
   base_color = '#312c85'
 
 const resend = new Resend(RESEND_API_KEY);
@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const { email, invited_by, invited_by_name } = await request.json();
   console.log('from frontend:', email, invited_by, invited_by_name);
 
-  /* 
+  /*
      Workflow:
 
      - Check if email is already a user. If so, we can create a new invite record, just don't need to
@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       - If not a user:
      - Send email invite to the email address with a link to join the pod
      - The link will direct them to a signup page with the pod ID as a parameter
-     - After signup, they will be added to the pod members list 
+     - After signup, they will be added to the pod members list
 
   */
 
@@ -71,7 +71,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       const { data: emailData, error: emailError } = await resend.emails.send({
         from: `team@foodnotbombs-tpa.app`,
         to: [email],
-        subject: `${invited_by_name} has invited you to join Tampa Food Not Bombs!`,
+        subject: `${invited_by_name} has invited you to join Behemoth Battle School!`,
         html: `
         <!DOCTYPE html>
         <html>
@@ -81,17 +81,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
               <td align="center" style="padding:30px 15px;">
 
                 <table width="100%" style="max-width:520px; background:#ffffff; border-radius:10px; overflow:hidden;" cellpadding="0" cellspacing="0">
-                  
+
                   <tr>
                     <td align="center" style="padding:25px; background:${base_color};">
                       <img src="${logo}" alt="TFNB Logo" width="70" style="display:block; margin-bottom:10px;" />
-                      <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">Tampa Food Not Bombs</h2>
+                      <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">Behemoth Battle School</h2>
                     </td>
                   </tr>
 
                   <tr>
                     <td style="padding:28px 30px; color:#444444; font-size:15px; line-height:1.6;">
-                      <p>${invited_by_name} has invited you to join Tampa Food Not Bombs!</p>
+                      <p>${invited_by_name} has invited you to join Behemoth Battle School!</p>
 
                       <table cellspacing="0" cellpadding="0" style="margin:25px auto;">
                         <tr>

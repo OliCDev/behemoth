@@ -9,15 +9,15 @@ import { RESEND_API_KEY } from '$env/static/private';
 import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
- 
 
-// import logo from '$lib/assets/img/tfnb_logo.png'
-const logo = 'https://foodnotbombs-tpa.app/assets/img/tfnb_logo.png', // Absolute URL for email embedding
-  base_color = '#312c85'
+
+// import logo from '$lib/assets/img/bbs_logo.webp'
+const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp', // Absolute URL for email embedding
+  base_color = '#fc9700'
 
 const resend = new Resend(RESEND_API_KEY);
 
-export const POST: RequestHandler = async ({ request, locals }) => { 
+export const POST: RequestHandler = async ({ request, locals }) => {
 
   const { password, token } = await request.json();
   console.log('Reset Password from frontend:', password, token);
@@ -57,7 +57,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   );
 
   const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
-  
+
   if (usersError) {
     console.error('Error listing users:', usersError);
     return json({ success: false, error: usersError.message }, { status: 500 });
@@ -68,7 +68,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (!user) {
     console.error('No user found with the provided email');
     return json({ success: false, error: 'No user found with the provided email' }, { status: 400 });
-  } 
+  }
 
     // Update user's password and clear reset token
   const { data: updateData, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
@@ -81,7 +81,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (updateError) {
     console.error('Error updating user password:', updateError);
     return json({ success: false, error: updateError.message }, { status: 500 });
-  }   
+  }
     return json({ success: true, message: 'Password has been successfully reset.' });
   }
-

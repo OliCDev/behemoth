@@ -27,6 +27,32 @@ export type UserPaymentMethod = {
   updated_at: string;
 };
 
+export type UserMetadata = {
+  username: string;
+  email: string;
+  pfp: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  pronouns: string;
+  admin: boolean;
+  invitation: {
+    token: string;
+    email: string;
+    accepted: boolean; },
+  reset_token: string;
+  member: boolean;
+  subscription_plan: {
+    id: 1;
+    name: 'Free';
+    description: 'Free plan with limited features';
+    price: 0;
+    currency: 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR';
+    billing_interval: 'month' | 'year';
+    created_at?: string;
+  },
+}
+
 export type AppSubscription = {
   id: string;
   name: string;
@@ -43,4 +69,5 @@ export type AppUser = User & {
   user_id: string; // Supabase user ID
   addresses: UserAddress[];
   payment_methods: UserPaymentMethod[];
+  metadata: UserMetadata;
 }

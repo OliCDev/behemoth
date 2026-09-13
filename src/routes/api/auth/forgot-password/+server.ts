@@ -9,19 +9,20 @@ import { RESEND_API_KEY } from '$env/static/private';
 import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
- 
 
-// import logo from '$lib/assets/img/tfnb_logo.png'
-const logo = 'https://foodnotbombs-tpa.app/assets/img/tfnb_logo.png', // Absolute URL for email embedding
-  base_color = '#312c85'
+
+// import logo from '$lib/assets/img/bbs_logo.webp'
+const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp', // Absolute URL for email embedding
+  base_color = '#fc9700',
+  company_name = "Behemoth Battle School";
 
 const resend = new Resend(RESEND_API_KEY);
 
-export const POST: RequestHandler = async ({ request, locals }) => { 
+export const POST: RequestHandler = async ({ request, locals }) => {
 
   const { email } = await request.json();
   console.log('from frontend:', email);
-  
+
   const resetToken = crypto.randomUUID();
 
   // insert into email_resets table
@@ -47,7 +48,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   );
 
   const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
-  
+
   if (usersError) {
     console.error('Error listing users:', usersError);
     return json({ success: false, error: usersError.message }, { status: 500 });
@@ -58,7 +59,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (!user) {
     console.error('No user found with the provided email');
     return json({ success: false, error: 'No user found with the provided email' }, { status: 400 });
-  } 
+  }
 
 // update user with reset token
   const { data: updateData, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
@@ -73,15 +74,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   }
 
   // Send the reset email using Resend
-  const reset_link = `https://foodnotbombs-tpa.app/reset-password?code=${resetToken}&email=${encodeURIComponent(email)}`;
+  const reset_link = `https://behemoth.olic.dev/reset-password?code=${resetToken}&email=${encodeURIComponent(email)}`;
 
 
     try {
       const { data: emailData, error: emailError } = await resend.emails.send({
-        
-        from: `Food Not Bombs Tampa <team@foodnotbombs-tpa.app>`,
+
+        from: `${company_name} <team@olic.dev>`,
         to: [email],
-        subject: `Resetting your password for Tampa Food Not Bombs`,
+        subject: `Resetting your password for ${company_name}`,
         html: `
         <!DOCTYPE html>
         <html>
@@ -91,11 +92,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
               <td align="center" style="padding:30px 15px;">
 
                 <table width="100%" style="max-width:520px; background:#ffffff; border-radius:10px; overflow:hidden;" cellpadding="0" cellspacing="0">
-                  
+
                   <tr>
                     <td align="center" style="padding:25px; background:${base_color};">
                       <img src="${logo}" alt="TFNB Logo" width="70" style="display:block; margin-bottom:10px;" />
-                      <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">Tampa Food Not Bombs</h2>
+                      <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">${company_name}</h2>
                     </td>
                   </tr>
 
@@ -120,8 +121,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
                   <tr>
                     <td align="center" style="padding:15px; background:${base_color}; color:#ffffff; font-size:12px;">
-                      Need help? Reach out to K or Oli. <br/>
-                      Sent with ❤️ from Tampa by Food Not Bombs
+                      Need help? Reach out to your Sifu <br/>
+                      Sent with ❤️ from Tampa by ${company_name}
                     </td>
                   </tr>
 
@@ -150,4 +151,3 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
     return json({ success: true, message: 'If an account with that email exists, a reset link has been sent.' });
   }
-
