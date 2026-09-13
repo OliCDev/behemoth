@@ -2,6 +2,7 @@
 	// Svelte
 	import { Alert } from 'flowbite-svelte';
 	import { fade } from 'svelte/transition';
+	import { Swords } from 'lucide-svelte'
 
 	const forgot_password_state = $state({
 		email: '',
@@ -42,10 +43,13 @@
 
 <div class="flex h-screen w-full flex-col justify-center bg-mist-100 dark:bg-mist-900">
 	<div
-		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-gray-700"
+		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-mist-700"
 	>
 		<div class="flex flex-col">
-			<p class="text-neutral-700 dark:text-neutral-300">
+		  <div class="mx-auto mb-4">
+				<Swords size={36}  color="red" strokeWidth={2} />
+			</div>
+			<p class="text-neutral-700 dark:text-neutral-300 text-center">
 				Forgot your password? No worries! Enter your email below to receive a password reset link.
 			</p>
 			<input
@@ -56,7 +60,7 @@
 				class="my-4 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
 			/>
 			<button
-				class="mt-2 cursor-pointer rounded-md bg-sky-600 p-2 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+				class="mt-2 cursor-pointer rounded-md bg-amber-600 p-2 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
 				disabled={forgot_password_state.sending}
 				onclick={() => sendPasswordResetLink()}
 			>

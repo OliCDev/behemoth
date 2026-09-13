@@ -2,6 +2,7 @@
 	// Svelte
 	import { Alert } from 'flowbite-svelte';
 	import { fade } from 'svelte/transition';
+	import { Swords } from 'lucide-svelte'
 
 	const reset_password_state = $state({
 		password: '',
@@ -63,7 +64,10 @@
 		class="align-center mx-auto flex w-96 flex-col justify-center rounded-lg bg-white p-8 shadow-xl dark:bg-mist-700"
 	>
 		<div class="flex flex-col">
-			<p class="text-mist-800 dark:text-mist-200">
+  		<div class="mx-auto mb-4">
+    		<Swords size={36}  color="red" strokeWidth={2} />
+   	  </div>
+			<p class="text-mist-800 dark:text-mist-200 text-center">
 				Please enter your new password below to reset your account password.
 			</p>
 			<input
@@ -83,7 +87,7 @@
 			<button
 				onclick={() => resetPassword()}
 				disabled={reset_password_state.resetting}
-				class="mt-2 cursor-pointer rounded-md bg-sky-600 p-2 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+				class="mt-2 cursor-pointer rounded-md bg-amber-600 p-2 text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
 			>
 				{reset_password_state.resetting ? 'Resetting...' : 'Reset Password'}
 			</button>
