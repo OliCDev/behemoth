@@ -47,7 +47,7 @@
 
 			if (response.ok) {
 				reset_password_state.success =
-					'Password has been reset successfully! You can now log in with your new password.';
+					'Password has been reset successfully! You can now <a href="/login"><strong>log in</strong> with your new password</a>.';
 			} else {
 				reset_password_state.error = result.error || 'Failed to reset password. Please try again.';
 			}
@@ -95,7 +95,7 @@
 			{#if reset_password_state.success}
 				<div in:fade out:fade={{ duration: 400 }}>
 					<Alert color="green" class="mt-2">
-						<span>{reset_password_state.success}</span>
+						<span>{@html reset_password_state.success}</span>
 					</Alert>
 				</div>
 			{/if}
