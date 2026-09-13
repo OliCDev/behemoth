@@ -2,6 +2,8 @@
 import { getContext, setContext } from 'svelte';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import type { AppUser, UserAddress, UserPaymentMethod } from '$lib/types/user';
+import { addressesStore } from '$lib/stores/addresses.svelte';
+import { paymentMethodsStore } from '$lib/stores/payment_methods.svelte';
 
 export class UserStore {
 	// Raw reactive state — the source of truth.
@@ -13,6 +15,8 @@ export class UserStore {
 	error = $state<string | null>(null);
 
 	#supabase: SupabaseClient;
+	#unsubscribeAddresses: (() => void) | null = null;
+	#unsubscribePaymentMethods: (() => void) | null = null;
 
 	// The single unified object your components read from.
 	// Recomputes automatically whenever any dependency above changes.
@@ -30,6 +34,18 @@ export class UserStore {
 	constructor(supabase: SupabaseClient, user: User | null = null) {
 		this.#supabase = supabase;
 		this.user = user;
+
+		// Addresses are owned by the shared addresses store; mirror its state into
+		// this store's reactive `addresses` so existing consumers keep working.
+		this.#unsubscribeAddresses = addressesStore.addresses.subscribe((value) => {
+			this.addresses = value ?? [];
+		});
+
+		// Payment methods are owned by the shared payment methods store; mirror its
+		// state into this store's reactive `paymentMethods` the same way.
+		this.#unsubscribePaymentMethods = paymentMethodsStore.paymentMethods.subscribe((value) => {
+			this.paymentMethods = value ?? [];
+		});
 	}
 
 	/** Pull the app-specific rows for the current auth user. */
@@ -39,25 +55,25 @@ export class UserStore {
 		this.error = null;
 
 		const uid = this.user.id;
-		const [addr, pm] = await Promise.all([
-			this.#supabase
-				.from('user_addresses')
-				.select('*')
-				.eq('user_id', uid)
-				.order('created_at'),
-			this.#supabase
-				.from('user_payment_methods')
-				.select('*')
-				.eq('user_id', uid)
-				.order('created_at')
+
+		// Scope the shared stores to this user (also wires realtime).
+		await Promise.all([
+			addressesStore.init([], this.#supabase, uid),
+			paymentMethodsStore.init([], this.#supabase, uid)
 		]);
 
-		if (addr.error || pm.error) {
-			this.error = (addr.error ?? pm.error)!.message;
-		} else {
-			this.addresses = addr.data ?? [];
-			this.paymentMethods = pm.data ?? [];
+		const [addr, pm] = await Promise.all([
+			addressesStore.fetchAddresses(uid),
+			paymentMethodsStore.fetchPaymentMethods(uid)
+		]);
+
+		const addrError = addr && 'error' in addr ? addr.error : null;
+		const pmError = pm && 'error' in pm ? pm.error : null;
+		if (addrError || pmError) {
+			this.error = addrError ?? pmError!;
 		}
+		// `this.addresses` and `this.paymentMethods` are kept in sync via the store
+		// subscriptions.
 		this.loading = false;
 	}
 
@@ -88,74 +104,61 @@ export class UserStore {
 		return true;
 	}
 
-	// ---- addresses ----
-	async addAddress(input: Omit<UserAddress, 'id' | 'user_id' | 'created_at'>) {
+	// ---- addresses (delegated to the shared addresses store) ----
+	async addAddress(input: Omit<UserAddress, 'id' | 'user_id' | 'created_at' | 'updated_at'>) {
 		if (!this.user) return false;
-		const { data, error } = await this.#supabase
-			.from('user_addresses')
-			.insert({ ...input, user_id: this.user.id })
-			.select()
-			.single();
-		if (error) {
-			this.error = error.message;
+		const res = await addressesStore.createAddress({ ...input, user_id: this.user.id });
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to add address';
 			return false;
 		}
-		this.addresses.push(data); // mutating a $state array is reactive in Svelte 5
 		return true;
 	}
 
-	async updateAddress(id: number, patch: Partial<UserAddress>) {
-		const { data, error } = await this.#supabase
-			.from('user_addresses')
-			.update(patch)
-			.eq('id', id)
-			.select()
-			.single();
-		if (error) {
-			this.error = error.message;
+	async updateAddress(id: string, patch: Partial<UserAddress>) {
+		const res = await addressesStore.updateAddress(id, patch);
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to update address';
 			return false;
 		}
-		const i = this.addresses.findIndex((a) => a.id === id);
-		if (i !== -1) this.addresses[i] = data; // index assignment is reactive too
 		return true;
 	}
 
-	async removeAddress(id: number) {
-		const { error } = await this.#supabase.from('user_addresses').delete().eq('id', id);
-		if (error) {
-			this.error = error.message;
+	async removeAddress(id: string) {
+		const res = await addressesStore.deleteAddress(id);
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to remove address';
 			return false;
 		}
-		this.addresses = this.addresses.filter((a) => a.id !== id);
 		return true;
 	}
 
-	// ---- payment methods (same pattern) ----
-	async addPaymentMethod(input: Omit<UserPaymentMethod, 'id' | 'user_id' | 'created_at'>) {
+	// ---- payment methods (delegated to the shared payment methods store) ----
+	async addPaymentMethod(input: Omit<UserPaymentMethod, 'id' | 'user_id' | 'created_at' | 'updated_at'>) {
 		if (!this.user) return false;
-		const { data, error } = await this.#supabase
-			.from('user_payment_methods')
-			.insert({ ...input, user_id: this.user.id })
-			.select()
-			.single();
-		if (error) {
-			this.error = error.message;
+		const res = await paymentMethodsStore.createPaymentMethod({ ...input, user_id: this.user.id });
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to add payment method';
 			return false;
 		}
-		this.paymentMethods.push(data);
 		return true;
 	}
 
-	async removePaymentMethod(id: number) {
-		const { error } = await this.#supabase
-			.from('user_payment_methods')
-			.delete()
-			.eq('id', id);
-		if (error) {
-			this.error = error.message;
+	async updatePaymentMethod(id: string, patch: Partial<UserPaymentMethod>) {
+		const res = await paymentMethodsStore.updatePaymentMethod(id, patch);
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to update payment method';
 			return false;
 		}
-		this.paymentMethods = this.paymentMethods.filter((p) => p.id !== id);
+		return true;
+	}
+
+	async removePaymentMethod(id: string) {
+		const res = await paymentMethodsStore.deletePaymentMethod(id);
+		if (!('success' in res) || !res.success) {
+			this.error = ('error' in res ? res.error : null) ?? 'Failed to remove payment method';
+			return false;
+		}
 		return true;
 	}
 
@@ -164,21 +167,19 @@ export class UserStore {
 	 * Call the returned channel's unsubscribe() on cleanup.
 	 */
 	subscribeRealtime() {
-		if (!this.user) return null;
-		const uid = this.user.id;
-		return this.#supabase
-			.channel(`member:${uid}`)
-			.on(
-				'postgres_changes',
-				{ event: '*', schema: 'public', table: 'user_addresses', filter: `user_id=eq.${uid}` },
-				() => this.load()
-			)
-			.on(
-				'postgres_changes',
-				{ event: '*', schema: 'public', table: 'user_payment_methods', filter: `user_id=eq.${uid}` },
-				() => this.load()
-			)
-			.subscribe();
+		// Addresses and payment methods realtime are handled by their respective
+		// shared stores (see `load`), so there is nothing extra to subscribe here.
+		return null;
+	}
+
+	/** Release the shared-store subscriptions and realtime channels. */
+	dispose() {
+		this.#unsubscribeAddresses?.();
+		this.#unsubscribeAddresses = null;
+		this.#unsubscribePaymentMethods?.();
+		this.#unsubscribePaymentMethods = null;
+		addressesStore.cleanup();
+		paymentMethodsStore.cleanup();
 	}
 }
 

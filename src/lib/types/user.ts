@@ -1,7 +1,7 @@
 import type { User } from '@supabase/supabase-js';
 
 export type UserAddress = {
-  id: string;
+  id?: string | null;
   user_id: string;
   label: string;
   address_line1: string;
@@ -11,20 +11,20 @@ export type UserAddress = {
   postal_code: string;
   country: string;
   primary: boolean;
-  created_at: string | null;
-  updated_at: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type UserPaymentMethod = {
-  id: string;
+  id?: string | null;
   user_id: string;
   card_brand: string;
   card_last4: string;
   card_exp_month: number;
   card_exp_year: number;
   primary: boolean;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export type UserMetadata = {
@@ -54,14 +54,14 @@ export type UserMetadata = {
 }
 
 export type AppSubscription = {
-  id: string;
+  id?: string | null;
   name: string;
   description: string;
   price: number;
   currency: string;
   billing_interval: 'month' | 'year';
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 

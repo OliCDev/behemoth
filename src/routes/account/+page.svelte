@@ -104,8 +104,31 @@
 
   	});
 
+  // Stores:
+  import {
+    addressesStore,
+    initAddressesStore,
+    addresses as userAdresses,
+    createAddress,
+    updateAddress,
+    deleteAddress,
+    setPrimaryAddress
+  } from '$lib/stores/addresses.svelte';
 
 
+  // lifecycle
+  onMount(() => {
+    console.log('Account page mounted. User:', userStore.appUser);
+    if(!userStore.appUser) {
+      throw error(404, 'User not found');
+    }
+    initAddressesStore(userStore.appUser?.addresses, supabase, userStore.appUser?.id || '');
+  });
+
+
+  // const addresses = addressesStore.fetchAddressesByUser(userStore.appUser?.id || '');
+  let visibleAddresses = $derived($userAdresses ?? []);
+  // console.log('Account page - visibleAddresses:', visibleAddresses);
 
   let appUser = $state(userStore.appUser ?? null);
   let metadata_state = $state({
@@ -174,7 +197,7 @@
   // functions
   // -- UI
   const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
-  const account_card_class = "w-full flex flex-col justify-start items-start gap-1 p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-200 bg-fixed lg:from-10% lg:to-60% dark:from-mist-400 dark:to-gray-900"
+  const account_card_class = "w-full flex flex-col justify-start items-start p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-200 bg-fixed lg:from-10% lg:to-60% dark:from-mist-400 dark:to-gray-900"
   const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-center items-center"
   // -- Profile Picture Upload
 	const handle_pfp_drop = async (event: CustomEvent) => {
@@ -268,6 +291,91 @@
 			}, 3000);
 		}
 	};
+
+	// -- Address CRUD
+	const reset_create_address = () => {
+		account_state.create.address.item = {
+			id: null,
+			user_id: userStore.appUser?.id || '',
+			label: '',
+			primary: false,
+			address_line1: '',
+			address_line2: '',
+			city: '',
+			state: '',
+			postal_code: '',
+			country: 'USA'
+		};
+	};
+
+	const flash = async (message: string, ok = true) => {
+		if (ok) {
+			account_state.success = message;
+			account_state.error = '';
+		} else {
+			account_state.error = message;
+			account_state.success = '';
+		}
+		await tick();
+		setTimeout(() => {
+			account_state.success = '';
+			account_state.error = '';
+		}, 3000);
+	};
+
+	// CREATE
+	const handle_create_address = async () => {
+		const item = account_state.create.address.item;
+		if (!item) return;
+		const { id, created_at, updated_at, ...payload } = item as UserAddress;
+		payload.user_id = userStore.appUser?.id || '';
+		const res = await createAddress(payload);
+		if (res?.success) {
+			account_state.create.address.open = false;
+			reset_create_address();
+			flash('Address added successfully!');
+		} else {
+			flash(res?.error || 'Error adding address.', false);
+		}
+	};
+
+	// UPDATE
+	const handle_update_address = async () => {
+		const item = account_state.edit.address.item;
+		if (!item?.id) return;
+		const { id, created_at, updated_at, ...updates } = item as UserAddress;
+		const res = await updateAddress(id as string, updates);
+		if (res?.success) {
+			account_state.edit.address.open = false;
+			account_state.edit.address.item = null;
+			flash('Address updated successfully!');
+		} else {
+			flash(res?.error || 'Error updating address.', false);
+		}
+	};
+
+	// DELETE
+	const handle_delete_address = async () => {
+		const item = account_state.delete.address.item;
+		if (!item?.id) return;
+		const res = await deleteAddress(item.id);
+		account_state.delete.address.open = false;
+		account_state.delete.address.item = null;
+		if (res?.success) {
+			flash('Address deleted successfully!');
+		} else {
+			flash(res?.error || 'Error deleting address.', false);
+		}
+	};
+
+	// SET PRIMARY
+	const handle_set_primary_address = async (id: string | null | undefined) => {
+		if (!id) return;
+		const res = await setPrimaryAddress(id);
+		if (!res?.success) {
+			flash(res?.error || 'Error setting primary address.', false);
+		}
+	};
 </script>
 
 <div class={containerClasses}>
@@ -328,6 +436,12 @@
   <div class="bg-white/60 p-8 shadow-xl dark:bg-white/10 rounded-md">
     {#if account_state.current_tab === 'General'}
       <div class="flex flex-col gap-4 w-full lg:w-[80%] mt-10 mb-20">
+        {#if account_state.success}
+          <Alert color="green">{account_state.success}</Alert>
+        {/if}
+        {#if account_state.error}
+          <Alert color="red">{account_state.error}</Alert>
+        {/if}
         <!-- Personal -->
         <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">
           <div class="w-full lg:w-1/4 flex flex-col justify-start items-start p-2">
@@ -403,9 +517,9 @@
             <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Addresses</h3>
           </div>
           <div class="w-full lg:w-3/4">
-            <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {#if userStore.appUser?.addresses && userStore.appUser.addresses.length > 0}
-                {#each userStore.appUser.addresses as address, index}
+            <div class="w-full grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 gap-4">
+              {#if visibleAddresses.length > 0}
+                {#each visibleAddresses as address, index}
                   <div class={account_card_class}>
                     <div class="w-full flex flex-row gap-2">
                       <div class="flex flex-1"></div>
@@ -416,20 +530,14 @@
                           aria-label="Primary address"
                           class="text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400 cursor-pointer"
                         >
-                          <i id={`primary-${index}`} class="fi fi-ss-heart text-green-400 hover:text-green-500"></i>
+                          <i id={`primary-${index}`} class={`fi fi-${address.primary ? 'ss-heart' : 'rr-heart'} text-green-400 hover:text-green-500`}></i>
                         </button>
                         {:else}
                         <Tooltip triggeredBy={`#primary-${index}`}>Set as primary address</Tooltip>
                         <button
                           aria-label="Set as primary address"
                           class="text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400 cursor-pointer"
-                          onclick={() => {
-                            if(userStore.appUser) {
-                              userStore.appUser.addresses?.forEach((addr, i) => {
-                                addr.primary = (i === index);
-                              });
-                            }
-                          }}
+                          onclick={() => handle_set_primary_address(address.id)}
                         >
                           <i id={`primary-${index}`} class="fi fi-ss-heart text-neutral-600 dark:text-neutral-400 hover:text-green-500 dark:hover:text-green-400"></i>
                         </button>
@@ -444,8 +552,8 @@
                           account_state.edit.address.item = null;
                         }}
                         onclick={() => {
-                          account_state.edit.address.item = address;
-                          account_state.edit.address.open = !account_state.create.address.open;
+                          account_state.edit.address.item = { ...address };
+                          account_state.edit.address.open = true;
                         }}
                       >
                         <i class="fi fi-ss-edit text-amber-400 hover:text-amber-500"></i>
@@ -453,14 +561,14 @@
                       <Modal
                         bind:open={account_state.edit.address.open}
                         size="lg"
-                      >
+                        >
                         <div class="w-full flex flex-col justify-center items-start px-8 pb-8">
                           <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
                             Edit "{account_state.edit.address.item?.label}"
                           </h3>
                           <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
                           {#if account_state.edit.address.item}
-                            <AddressForm address={account_state.edit.address.item} />
+                            <AddressForm bind:address={account_state.edit.address.item} editing={true} />
                           {/if}
                           <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
                             <button
@@ -474,11 +582,7 @@
                             </button>
                             <button
                               class="rounded-md cursor-pointer bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
-                              onclick={() => {
-                                account_state.edit.address.open = false;
-                                account_state.edit.address.item = null;
-                                update_user_account();
-                              }}
+                              onclick={handle_update_address}
                             >
                               Save Changes
                             </button>
@@ -524,10 +628,7 @@
                             </button>
                             <button
                               class="rounded-md cursor-pointer bg-red-500 px-4 py-2 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-                              onclick={() => {
-                                userStore.appUser?.addresses?.splice(index, 1);
-                                account_state.delete.address.open = false;
-                              }}
+                              onclick={handle_delete_address}
                             >
                               Delete
                             </button>
@@ -535,15 +636,17 @@
                         </div>
                       </Modal>
                     </div>
-                    <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold">{address.label}</h4>
-                    <p class="text-neutral-600 dark:text-neutral-400">{address.address_line1}</p>
-                    <p class="text-neutral-600 dark:text-neutral-400">{address.address_line2}</p>
-                    <p class="text-neutral-600 dark:text-neutral-400">{address.city}, {address.state} {address.postal_code}</p>
-                    <p class="text-neutral-600 dark:text-neutral-400">{address.country}</p>
+                    <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold my-1">{address.label}</h4>
+                    <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line1}</p>
+                    {#if address.address_line2?.length}
+                      <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line2}</p>
+                    {/if}
+                    <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.city}, {address.state} {address.postal_code}</p>
+                    <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.country}</p>
                   </div>
                 {/each}
               {:else}
-                <p class="text-neutral-600 dark:text-neutral-400">No addresses found.</p>
+                <p class="text-neutral-600 dark:text-neutral-400 mb-0">No addresses found.</p>
               {/if}
               <div class={account_new_item_class}>
                 <button
@@ -566,7 +669,7 @@
                       Add New Address
                     </h3>
                     <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
-                    <AddressForm address={account_state.create.address.item} />
+                    <AddressForm address={account_state.create.address.item} editing={false} />
                     <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
                       <button
                         class="rounded-md  cursor-pointer bg-neutral-300 px-4 py-2 text-neutral-800 hover:bg-neutral-400 dark:bg-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-600"
@@ -578,12 +681,7 @@
                       </button>
                       <button
                         class="rounded-md cursor-pointer bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
-                        onclick={() => {
-                          if(userStore.appUser && account_state.create.address.item) {
-                            userStore.appUser.addresses?.push(account_state.create.address.item);
-                          }
-                          account_state.create.address.open = false;
-                        }}
+                        onclick={handle_create_address}
                       >
                         Save Changes
                       </button>
