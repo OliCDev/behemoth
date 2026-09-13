@@ -42,6 +42,7 @@
   // lifecycle
   import { onMount, onDestroy, tick } from 'svelte';
 	import type { UserAddress } from '$lib/types/user';
+	import { error } from '@sveltejs/kit';
 
 
 
@@ -131,6 +132,8 @@
       billing_interval: 'month',
       created_at: new Date().toISOString(),
     },
+    success: '',
+    error: ''
   })
   $effect(() => {
     if (userStore.appUser) {
@@ -237,6 +240,32 @@
 			// console.log('Profile picture updated successfully!');
 		} else {
 			console.error('Error updating profile picture: ', result.statusText);
+		}
+	};
+	const update_user_account = async () => {
+		try {
+			const result = fetch('/api/user/update', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(metadata_state)
+			});
+			// console.log('User account updated: ', result);
+			metadata_state.success = 'User updated successfully!';
+			metadata_state.error = '';
+			await tick();
+			setTimeout(() => {
+				metadata_state.success = '';
+			}, 3000);
+		} catch (error) {
+			console.error('Error updating user account: ', error);
+			metadata_state.error = 'Error updating user account!';
+			metadata_state.success = '';
+			await tick();
+			setTimeout(() => {
+				metadata_state.error = '';
+			}, 3000);
 		}
 	};
 </script>
@@ -448,6 +477,7 @@
                               onclick={() => {
                                 account_state.edit.address.open = false;
                                 account_state.edit.address.item = null;
+                                update_user_account();
                               }}
                             >
                               Save Changes
@@ -648,7 +678,9 @@
           <div class="w-full lg:w-3/4">
             <button
               class="rounded-md cursor-pointer w-full bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"
-              onclick={() => console.log('Save changes clicked')}
+              onclick={() => {
+                update_user_account();
+              }}
             >
               Save Changes
             </button>

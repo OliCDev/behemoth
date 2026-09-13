@@ -23,19 +23,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const { error: membersError } = await locals.supabase
     .from('members')
     .update({
-      username: newMetadata?.username,
       pfp: newMetadata?.pfp,
       admin: newMetadata?.admin,
       metadata: {
+        username: newMetadata?.username,
         pronouns: newMetadata?.pronouns,
         pfp: newMetadata?.pfp,
         admin: newMetadata?.admin,
         first_name: newMetadata?.first_name,
         last_name: newMetadata?.last_name,
         phone_number: newMetadata?.phone_number
-      }
+      },
+      addresses: newMetadata?.addresses,
+      payment_methods: newMetadata?.payment_methods
     })
-    .eq('member', user?.id);
+    .eq('user_id', user?.id);
 
   if (membersError) {
     console.error('Error updating friends table:', membersError);

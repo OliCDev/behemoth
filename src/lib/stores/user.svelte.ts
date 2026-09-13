@@ -68,7 +68,23 @@ export class UserStore {
 			this.error = error.message;
 			return false;
 		}
-		this.user = data.user; // reassigning triggers appUser recompute
+    this.user = data.user; // reassigning triggers appUser recompute
+
+    // Update the members table with the new metadata
+    const { error: membersError } = await this.#supabase
+      .from('members')
+      .update({
+        metadata: {
+          ...this.user.user_metadata,
+          ...patch
+        }
+      })
+      .eq('user_id', this.user.id);
+
+    if (membersError) {
+      this.error = membersError.message;
+      return false;
+    }
 		return true;
 	}
 
@@ -170,7 +186,7 @@ export class UserStore {
 const KEY = Symbol('user-store');
 
 export function setUserStore(supabase: SupabaseClient, user: User | null) {
-  console.log('Setting user store with user:', user);
+  // console.log('Setting user store with user:', user);
 	return setContext(KEY, new UserStore(supabase, user));
 }
 
