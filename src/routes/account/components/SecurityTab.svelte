@@ -40,6 +40,9 @@
     }
     security_state.success = 'Password updated successfully.';
     security_state.error = '';
+    security_state.data.current_password = '';
+    security_state.data.new_password = '';
+    security_state.data.confirm_password = ''
     onsuccess();
   }
   const check_current_password = async () => {
