@@ -384,7 +384,9 @@
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">
       {#each account_state.tabs as tab}
         <button
-          class="flex-1 lg:min-h-8.75 overflow-hidden py-2 text-center text-sm lg:text-md text-neutral-800 dark:text-neutral-200 hover:bg-mist-200 dark:hover:bg-mist-700 cursor-pointer"
+          class={`${
+            account_state.current_tab === tab.name ? 'bg-mist-200 dark:bg-mist-700' : 'bg-transparent'
+          } flex-1 lg:min-h-8.75 overflow-hidden py-2 text-center text-sm lg:text-md text-neutral-800 dark:text-neutral-200 hover:bg-mist-200 dark:hover:bg-mist-700 cursor-pointer`}
           class:font-bold={account_state.current_tab === tab.name}
           onclick={() => (account_state.current_tab = tab.name)}
         >
