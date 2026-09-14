@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     return json({ success: false, error: updateError.message }, { status: 500 });
   }
 
-  console.log('New metadata to save:', user?.user_metadata);
+  // console.log('New metadata to save:', user?.user_metadata);
 
   // Update member table with new metadata
   const { error: membersError } = await locals.supabase

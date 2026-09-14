@@ -3,14 +3,8 @@
   // imports
   import type { UserAddress } from "$lib/types/user";
   import {
-		Alert,
-		Tabs,
-		TabItem,
-		Tooltip,
-		Spinner,
 		Label,
 		Select,
-		Modal
 	} from 'flowbite-svelte';
 	import { countries } from '$lib/assets/data/countries';
 	import { states } from '$lib/assets/data/states';
@@ -74,7 +68,7 @@
       <div class="w-full lg:w-2/5 flex flex-col justify-start items-start gap-1">
         {#if address.country === 'USA' }
           <Label>State</Label>
-          <Select items={states} bind:value={address.state} />
+          <Select class={input_class} items={states} bind:value={address.state} />
         {:else}
           <Label>State/Province</Label>
           <input
