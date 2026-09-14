@@ -17,8 +17,9 @@
 
 	// Components
 	// import AddressForm from './components/AddressForm.svelte';
-	import GeneralTab from './components/GeneralTab.svelte';
-	import SecurityTab from './components/SecurityTab.svelte';
+	import GeneralTab from './components/tabs/GeneralTab.svelte';
+	import SecurityTab from './components/tabs/SecurityTab.svelte';
+	import PaymentMethodsTab from './components/tabs/PaymentMethodsTab.svelte';
 
 	// Data
 	const supabase = $derived($page.data.supabase), user = $derived($page.data.user);
@@ -170,6 +171,7 @@
     deleteAddress,
     setPrimaryAddress
   } from '$lib/stores/addresses.svelte';
+	import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
 
 
   // lifecycle
@@ -405,7 +407,19 @@
       onerror={() => { handle_toast("Error updating user security settings!", "error") }}
     />
     {:else if account_state.current_tab === 'Payment Methods'}
-      <p>Payment methods settings will go here.</p>
+    <PaymentMethodsTab
+      {user}
+      {supabase}
+      onsuccess={() => { handle_toast("User payment methods updated successfully!", "success")}}
+      onerror={() => { handle_toast("Error updating user payment methods!", "error") }}
+    />
+    {:else if account_state.current_tab === 'Subscription'}
+    <SubscriptionTab
+      {user}
+      {supabase}
+      onsuccess={() => { handle_toast("User subscription updated successfully!", "success")}}
+      onerror={() => { handle_toast("Error updating subscription!", "error") }}
+    />
     {/if}
   </div>
 </div>

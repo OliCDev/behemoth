@@ -14,7 +14,7 @@
 	// Utils
 
 	// Components
-	import AddressForm from './AddressForm.svelte';
+	import AddressForm from '../AddressForm.svelte';
 
 	// Data
 	// const supabase = $derived($page.data.supabase), user = $derived($page.data.user);
