@@ -18,6 +18,7 @@
 	// Components
 	// import AddressForm from './components/AddressForm.svelte';
 	import GeneralTab from './components/GeneralTab.svelte';
+	import SecurityTab from './components/SecurityTab.svelte';
 
 	// Data
 	const supabase = $derived($page.data.supabase), user = $derived($page.data.user);
@@ -69,7 +70,8 @@
   		tabs: [
   		  { name: 'General', href: '#', current: true },
         { name: 'Security', href: '#', current: false },
-        { name: 'Payment Methods', href: '#', current: false }
+        { name: 'Payment Methods', href: '#', current: false },
+        { name: 'Subscription', href: '#', current: false }
   		],
       edit: {
         address: {
@@ -191,15 +193,8 @@
 
   // functions
   // -- UI
-  const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
-  const account_card_class = "w-full flex flex-col justify-start items-start p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-300 bg-fixed lg:from-30% lg:to-70% dark:from-mist-900 dark:to-mist-600"
-  const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-center items-center"
-  const modal_base_class = "rounded-lg bg-white shadow-xl dark:bg-mist-900"
-  const modal_body_class = "space-y-0 p-6"
-
   // Toasts
   type ToastColor = "green" | "red" | "yellow" | "blue";
-
   interface ToastItem {
     id: number;
     message: string;
@@ -208,15 +203,7 @@
     visible: boolean;
   }
 
-  let toasts = $state<ToastItem[]>([]),
-    nextId = $state(1);
-
-  const messages: Record<ToastColor, string> = {
-    green: "Successfully saved!",
-    blue: "New message received",
-    yellow: "Please review your changes",
-    red: "Operation failed"
-  };
+  let toasts = $state<ToastItem[]>([]), nextId = $state(1);
 
   const addToast = (color: ToastColor, message: string) => {
     const newToast: ToastItem = {
@@ -235,7 +222,6 @@
     toasts = [...toasts, newToast];
     nextId++;
   }
-
   const dismissToast = (id: number) => {
     // Clear timeout if it exists
     const toast = toasts.find((t) => t.id === id);
@@ -250,12 +236,20 @@
       toasts = toasts.filter((t) => t.id !== id);
     }, 300); // Slightly longer than transition duration
   }
-
   const handleClose = (id: number) => {
     return () => {
       dismissToast(id);
     };
   }
+ 	const handle_toast = (message: string, type: 'success' | 'error') => {
+    const color: ToastColor = type === 'success' ? 'green' : 'red';
+     account_state.success = message;
+     account_state.error = '';
+     addToast(color, account_state.success);
+     setTimeout(() => {
+       account_state.success = '';
+     }, 3000);
+   };
 
   // -- Profile Picture Upload
 	const handle_pfp_drop = async (event: CustomEvent) => {
@@ -400,25 +394,16 @@
       <GeneralTab
         {user}
         {supabase}
-        onsuccess={() => {
-          account_state.success = 'User updated successfully!';
-          account_state.error = '';
-          addToast("green", account_state.success)
-          setTimeout(() => {
-            account_state.success = '';
-          }, 3000);
-        }}
-        onerror={() => {
-          account_state.success = '';
-          account_state.error = 'Error updating user account!';
-          addToast("red", account_state.error)
-          setTimeout(() => {
-            account_state.success = '';
-          }, 3000);
-        }}
+        onsuccess={() => { handle_toast("User account updated successfully!", "success")}}
+        onerror={() => { handle_toast("Error updating user account!", "error") }}
       />
     {:else if account_state.current_tab === 'Security'}
-      <p>Security settings will go here.</p>
+    <SecurityTab
+      {user}
+      {supabase}
+      onsuccess={() => { handle_toast("User security settings updated successfully!", "success")}}
+      onerror={() => { handle_toast("Error updating user security settings!", "error") }}
+    />
     {:else if account_state.current_tab === 'Payment Methods'}
       <p>Payment methods settings will go here.</p>
     {/if}

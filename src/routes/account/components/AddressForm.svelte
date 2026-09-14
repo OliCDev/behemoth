@@ -16,8 +16,7 @@
   } = $props<{ address: UserAddress, editing: boolean }>();
 
   // Helpers
-  const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
-
+ import { input_class } from '$lib/utils/style';
 
 </script>
 
