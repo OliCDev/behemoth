@@ -47,7 +47,9 @@
 	>
 		<div class="flex flex-col">
 		  <div class="mx-auto mb-4">
-				<Swords size={36}  color="red" strokeWidth={2} />
+				<a href="/">
+				  <Swords size={36}  color="red" strokeWidth={2} />
+				</a>
 			</div>
 			<p class="text-neutral-700 dark:text-neutral-300 text-center">
 				Forgot your password? No worries! Enter your email below to receive a password reset link.

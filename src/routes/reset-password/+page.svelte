@@ -65,7 +65,9 @@
 	>
 		<div class="flex flex-col">
   		<div class="mx-auto mb-4">
-    		<Swords size={36}  color="red" strokeWidth={2} />
+    		<a href="/">
+				  <Swords class="h-12 w-12 text-amber-600 dark:text-amber-500" />
+				</a>
    	  </div>
 			<p class="text-mist-800 dark:text-mist-200 text-center">
 				Please enter your new password below to reset your account password.
