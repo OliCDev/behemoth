@@ -10,9 +10,10 @@
 	import { fly } from "svelte/transition";
 	import { Swords } from "lucide-svelte"
 	import Dropzone from 'svelte-file-dropzone';
+	import { browser } from '$app/environment';
 
 	// Utils
-	import { containerClasses } from '$lib/utils/style';
+	import { containerClasses, button_1, button_cancel } from '$lib/utils/style';
 	import { page } from '$app/stores';
 
 	// Components
@@ -49,6 +50,7 @@
 
   // state
    let appUser = $state(userStore.appUser ?? null);
+  const dark_mode = $state(browser && window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches);
   const default_pfp =
 		'https://uqseuzmnwuthgorjvrdi.supabase.co/storage/v1/object/sign/img/Users/pfp_default.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYTdiMWM0Zi0wNTYzLTRmZTQtYTA0Yy0wMmZiZWViYzYwOWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWcvVXNlcnMvcGZwX2RlZmF1bHQuYXZpZiIsImlhdCI6MTc2MzYxMTY0MywiZXhwIjoxNzk1MTQ3NjQzfQ.7f3p36JtVhzE3-5xeo5A9JlIizORlYAQxup3_R9Hayk';
   const pfp_state = $state<{
@@ -319,7 +321,27 @@
 			console.error('Error updating profile picture: ', result.statusText);
 		}
 	};
+	const toggle_admin = async () => {
+	  if(!userStore.appUser) return;
+    const new_admin_status = !userStore.appUser.user_metadata.admin;
+    const result = await fetch(`/api/auth/toggle-admin/${user.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        admin: new_admin_status
+      })
+    });
 
+    if (result.ok) {
+      userStore.appUser.user_metadata.admin = new_admin_status;
+      handle_toast(`Admin status updated to ${new_admin_status}`, "success");
+    } else {
+      console.error('Error updating admin status: ', result.statusText);
+      handle_toast('Error updating admin status', "error");
+    }
+	}
 </script>
 
 <div class={containerClasses}>
@@ -327,7 +349,7 @@
     {#each toasts as toast (toast.id)}
       <Toast color={toast.color} dismissable={true} transition={fly} params={{ x: 200, duration: 800 }} class="w-64" onclose={handleClose(toast.id)} bind:toastStatus={toast.visible}>
         {#snippet icon()}
-          <Swords size={10}  color="white" strokeWidth={2} />
+          <Swords size={10}  color={`${ dark_mode ? 'white' : 'black' }`} strokeWidth={2} />
           {/snippet}
         <div class="flex flex-row flex-1">
           <P>{toast.message}</P>
@@ -375,6 +397,7 @@
       <div class="flex flex-col p-4 justify-center items-start ">
         <h3 class="text-neutral-800 dark:text-neutral-200">{ user?.user_metadata?.first_name } { user?.user_metadata?.last_name }</h3>
         <h4 class="text-mist-700 dark:text-mist-400">{user?.user_metadata?.email }</h4>
+        <!-- <button onclick={toggle_admin} class={`${button_1}`}>toggle admin</button> -->
       </div>
     </div>
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">

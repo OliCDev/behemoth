@@ -8,13 +8,14 @@ import { RESEND_API_KEY } from '$env/static/private';
 // Supabase service key:
 import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 import { createClient } from '@supabase/supabase-js';
-import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { PUBLIC_SUPABASE_URL, PUBLIC_PRIMARY_COLOR, PUBLIC_SECONDARY_COLOR, PUBLIC_TERTIARY_COLOR } from '$env/static/public';
 
+const primary_color = PUBLIC_PRIMARY_COLOR || '#fc9700',
+  secondary_color = PUBLIC_SECONDARY_COLOR || '#f2f6f9',
+  tertiary_color = PUBLIC_TERTIARY_COLOR || '#ffffff';
 
 // import logo from '$lib/assets/img/bbs_logo.webp'
-const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp', // Absolute URL for email embedding
-  base_color = '#fc9700'
-
+const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp' // Absolute URL for email embedding
 const resend = new Resend(RESEND_API_KEY);
 
 export const POST: RequestHandler = async ({ request, locals }) => {

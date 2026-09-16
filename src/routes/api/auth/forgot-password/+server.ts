@@ -8,12 +8,14 @@ import { RESEND_API_KEY } from '$env/static/private';
 // Supabase service key:
 import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 import { createClient } from '@supabase/supabase-js';
-import { PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { PUBLIC_SUPABASE_URL, PUBLIC_PRIMARY_COLOR, PUBLIC_SECONDARY_COLOR, PUBLIC_TERTIARY_COLOR } from '$env/static/public';
 
+const primary_color = PUBLIC_PRIMARY_COLOR || '#fc9700',
+  secondary_color = PUBLIC_SECONDARY_COLOR || '#f2f6f9',
+  tertiary_color = PUBLIC_TERTIARY_COLOR || '#ffffff';
 
 // import logo from '$lib/assets/img/bbs_logo.webp'
 const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp', // Absolute URL for email embedding
-  base_color = '#fc9700',
   company_name = "Behemoth Battle School";
 
 const resend = new Resend(RESEND_API_KEY);
@@ -94,8 +96,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                 <table width="100%" style="max-width:520px; background:#ffffff; border-radius:10px; overflow:hidden;" cellpadding="0" cellspacing="0">
 
                   <tr>
-                    <td align="center" style="padding:25px; background:${base_color};">
-                      <img src="${logo}" alt="TFNB Logo" width="70" style="display:block; margin-bottom:10px;" />
+                    <td align="center" style="padding:25px; background:${tertiary_color};">
+                      <img src="${logo}" alt="${company_name} Logo" width="70" style="display:block; margin-bottom:10px;" />
                       <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">${company_name}</h2>
                     </td>
                   </tr>
@@ -106,7 +108,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
                       <table cellspacing="0" cellpadding="0" style="margin:25px auto;">
                         <tr>
-                          <td align="center" style="background:${base_color}; padding:14px 30px; border-radius:6px;">
+                          <td align="center" style="background:${primary_color}; padding:14px 30px; border-radius:6px;">
                             <a href="${reset_link}" target="_blank"
                               style="color:white; text-decoration:none; font-weight:bold; font-size:16px;">
                               Reset Password
@@ -120,7 +122,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                   </tr>
 
                   <tr>
-                    <td align="center" style="padding:15px; background:${base_color}; color:#ffffff; font-size:12px;">
+                    <td align="center" style="padding:15px; background:${primary_color}; color:#ffffff; font-size:12px;">
                       Need help? Reach out to your Sifu <br/>
                       Sent with ❤️ from Tampa by ${company_name}
                     </td>

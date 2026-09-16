@@ -1,5 +1,5 @@
 // containers
-export const containerClasses = "w-full lg:w-2/3 mx-auto lg:mt-20 h-screen flex flex-col gap-4 p-4";
+export const containerClasses = "w-full lg:w-4/5 mx-auto lg:mt-20 h-screen flex flex-col gap-4 p-4";
 
 // Buttons
 export const button_1 = "rounded-md bg-amber-500 px-4 py-2 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700"

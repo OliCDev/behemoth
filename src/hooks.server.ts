@@ -72,8 +72,15 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.user = user
 
     // Redirect logged-in comrades from home page to dashboard
-    if (user && event.url.pathname === '/') {
+    if (user && event.url.pathname === '/' && !user.user_metadata.admin) {
       return Response.redirect(new URL('/dashboard', event.url), 303)
+    } else if (user && event.url.pathname === '/' && user.user_metadata.admin) {
+      return Response.redirect(new URL('/admin', event.url), 303)
+    }
+
+    const protectedRoutes = ['/admin']
+    if (user && protectedRoutes.includes(event.url.pathname) && !user.user_metadata.admin) {
+      return Response.redirect(new URL('/', event.url), 303)
     }
   } else {
     // For auth/cleanup endpoints, just set to null - they handle authentication directly

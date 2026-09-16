@@ -179,7 +179,7 @@
   // -- UI
   const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
   const account_card_class = "w-full flex flex-col justify-start items-start p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-300 bg-fixed lg:from-30% lg:to-70% dark:from-mist-900 dark:to-mist-600"
-  const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-center items-center"
+  const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-end items-end"
   const modal_base_class = "rounded-lg bg-white shadow-xl dark:bg-mist-900"
   const modal_body_class = "space-y-0 p-6"
   // -- Profile Picture Upload
@@ -388,7 +388,7 @@
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Addresses</h3>
     </div>
     <div class="w-full lg:w-3/4">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 gap-4">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
         {#if visibleAddresses.length > 0}
           {#each visibleAddresses as address, index}
             <div class={account_card_class}>
@@ -443,7 +443,7 @@
                     {#if general_state.edit.address.item}
                       <AddressForm bind:address={general_state.edit.address.item} editing={true} />
                     {/if}
-                    <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
+                    <div class="flex w-full flex-row gap-4 justify-end items-center mt-4">
                       <button
                         class={`${button_cancel}`}
                         onclick={() => {
@@ -547,7 +547,7 @@
               </h3>
               <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
               <AddressForm address={general_state.create.address.item} editing={false} />
-              <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
+              <div class="w-full flex flex-row gap-4 justify-end items-end mt-4">
                 <button
                   class={`${button_cancel}`}
                   onclick={() => {
@@ -560,7 +560,7 @@
                   class={`${button_1} cursor-pointer`}
                   onclick={handle_create_address}
                 >
-                  Save Changes
+                  Add Address
                 </button>
               </div>
             </div>
