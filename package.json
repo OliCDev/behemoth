@@ -43,6 +43,7 @@
 		"jwt-decode": "^4.0.0",
 		"lucide-svelte": "^1.0.1",
 		"resend": "^6.12.3",
+		"square": "^46.0.0",
 		"svelte-file-dropzone": "^2.0.9",
 		"xlsx": "^0.18.5"
 	}
