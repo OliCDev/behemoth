@@ -46,6 +46,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       return json({ success: false, error: updateMetadataError.message }, { status: 500 });
     }
 
+    // create new customer in Square:
+
+
   }
 
   // Cookies are automatically set by the supabase client
