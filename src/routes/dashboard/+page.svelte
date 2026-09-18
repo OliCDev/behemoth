@@ -249,7 +249,9 @@
 		>
 			{#if user?.user_metadata?.admin}
 				<div id="dashboard-main-row" class="flex w-full flex-row">
-
+				  <p class="text-center text-xl text-neutral-600 dark:text-neutral-200">
+				    Welcome to the {app_name} dashboard, {user?.user_metadata?.first_name || 'warrior'}! You are an admin.
+						</p>
 				</div>
 			{:else}
 			<div class="align-center my-auto flex flex-col items-center justify-center p-4">
