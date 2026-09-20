@@ -1,7 +1,7 @@
 <script lang="ts">
 
   // imports
-  import type { UserAddress } from "$lib/types/user";
+  import type { MemberAddress } from "$lib/types/member";
   import {
 		Label,
 		Select,
@@ -13,14 +13,14 @@
   let {
     address = $bindable(),
     editing
-  } = $props<{ address: UserAddress, editing: boolean }>();
+  } = $props<{ address: MemberAddress, editing: boolean }>();
 
   // Helpers
  import { input_class } from '$lib/utils/style';
 
 </script>
 
-<div class="ctr-address_form w-full  flex flex-col justify-start items-start   px-4">
+<div class="ctr-address_form w-full  flex flex-col justify-start items-start px-4">
   <div class="w-full flex flex-col mb-4 gap-4">
     <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
       <Label>Label</Label>

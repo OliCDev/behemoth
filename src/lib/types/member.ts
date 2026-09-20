@@ -1,6 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 
-export type UserAddress = {
+export type MemberAddress = {
   id?: string | null;
   user_id: string;
   label: string;
@@ -15,7 +15,7 @@ export type UserAddress = {
   updated_at?: string | null;
 };
 
-export type UserPaymentMethod = {
+export type MemberPaymentMethod = {
   id?: string | null;
   user_id: string;
   card_brand: string;
@@ -27,7 +27,7 @@ export type UserPaymentMethod = {
   updated_at?: string;
 };
 
-export type UserMetadata = {
+export type MemberMetadata = {
   username: string;
   email: string;
   pfp: string;
@@ -53,6 +53,21 @@ export type UserMetadata = {
   },
 }
 
+// Raw shape of a row in the `members` table. This is the persistence-layer
+// counterpart to the fused `Member` type below: it holds the app-specific
+// columns that extend Supabase's auth `User`, but not the auth fields
+// themselves (which live in `auth.users`) nor the relational addresses /
+// payment methods (which live in their own tables).
+export type MemberRecord = {
+  id?: string | null;
+  user_id: string; // FK -> auth.users.id
+  admin: boolean;
+  pfp: string;
+  metadata: MemberMetadata;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
 export type AppSubscription = {
   id?: string | null;
   name: string;
@@ -65,9 +80,12 @@ export type AppSubscription = {
 };
 
 
-export type AppUser = User & {
-  user_id: string; // Supabase user ID
-  addresses: UserAddress[];
-  payment_methods: UserPaymentMethod[];
-  metadata: UserMetadata;
+// The fused, application-facing view of a user. It combines Supabase's auth
+// `User` (id, email, user_metadata, ...) with the `members` record's
+// app-specific fields and the user's related addresses / payment methods.
+export type Member = User & {
+  user_id: string; // Supabase user ID (mirrors `id`)
+  addresses: MemberAddress[];
+  payment_methods: MemberPaymentMethod[];
+  metadata: MemberMetadata;
 }

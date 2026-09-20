@@ -31,25 +31,33 @@
 	// console.log('Account page - User:', user);
 	// console.log('Account page - Supabase client:', supabase);
 
-  // types
-
-  // store
-  import { getUserStore } from '$lib/stores/user.svelte';
-	const userStore = getUserStore();
+  // type
 
 	// debug
-	// console.log('Account page - userStore - User:', userStore.appUser);
-	// console.log('Account page - userStore - User.addresses:', userStore.appUser?.addresses);
+	// console.log('Account page - member:', $member);
+	// console.log('Account page - member.addresses:', $member?.addresses);
 
   // lifecycle
   import { onMount, onDestroy, tick } from 'svelte';
-	import type { UserAddress } from '$lib/types/user';
+	import type { MemberAddress } from '$lib/types/member';
 	import { error } from '@sveltejs/kit';
 
-
+	// Stores:
+  import {
+    addressesStore,
+    addresses as userAdresses,
+    createAddress,
+    updateAddress,
+    deleteAddress,
+    setPrimaryAddress
+  } from '$lib/stores/addresses.svelte';
+import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
+  import {
+    member,
+    initMemberStore
+  } from '$lib/stores/member.svelte';
 
   // state
-   let appUser = $state(userStore.appUser ?? null);
   const dark_mode = $state(browser && window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches);
   const default_pfp =
 		'https://uqseuzmnwuthgorjvrdi.supabase.co/storage/v1/object/sign/img/Users/pfp_default.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYTdiMWM0Zi0wNTYzLTRmZTQtYTA0Yy0wMmZiZWViYzYwOWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWcvVXNlcnMvcGZwX2RlZmF1bHQuYXZpZiIsImlhdCI6MTc2MzYxMTY0MywiZXhwIjoxNzk1MTQ3NjQzfQ.7f3p36JtVhzE3-5xeo5A9JlIizORlYAQxup3_R9Hayk';
@@ -79,7 +87,7 @@
       edit: {
         address: {
           open: false,
-          item: null as UserAddress | null
+          item: null as MemberAddress | null
         }
       },
       create: {
@@ -87,7 +95,8 @@
           open: false,
           item: {
             id: null,
-            user_id: userStore.appUser?.id || '',
+            // svelte-ignore state_referenced_locally
+            user_id: user?.id || '',
             label: '',
             primary: false,
             address_line1: '',
@@ -102,7 +111,7 @@
       delete:{
         address: {
           open: false,
-          item: null as UserAddress | null
+          item: null as MemberAddress | null
         }
       }
 
@@ -134,23 +143,31 @@
     success: '',
     error: ''
   })
+
+  onMount(async () => {
+    // The member store is idempotent and is normally initialised by the root
+    // layout; awaiting it here guarantees `$member` is populated for this user
+    // (refreshing its data) without duplicating the realtime channel.
+    await initMemberStore(user, supabase);
+  })
+
   $effect(() => {
-    if (userStore.appUser) {
-      metadata_state.username = userStore.appUser.user_metadata.username || '';
-      metadata_state.email = userStore.appUser.user_metadata.email || '';
-      metadata_state.pfp = userStore.appUser.user_metadata.pfp_url || default_pfp;
-      metadata_state.first_name = userStore.appUser.user_metadata.first_name || '';
-      metadata_state.last_name = userStore.appUser.user_metadata.last_name || '';
-      metadata_state.phone_number = userStore.appUser.user_metadata.phone_number || '';
-      metadata_state.pronouns = userStore.appUser.user_metadata.pronouns || '';
-      metadata_state.admin = userStore.appUser.user_metadata.admin || false;
-      metadata_state.invitation = userStore.appUser.user_metadata.invitation || {
+    if ($member) {
+      metadata_state.username = $member.user_metadata.username || '';
+      metadata_state.email = $member.user_metadata.email || '';
+      metadata_state.pfp = $member.user_metadata.pfp_url || default_pfp;
+      metadata_state.first_name = $member.user_metadata.first_name || '';
+      metadata_state.last_name = $member.user_metadata.last_name || '';
+      metadata_state.phone_number = $member.user_metadata.phone_number || '';
+      metadata_state.pronouns = $member.user_metadata.pronouns || '';
+      metadata_state.admin = $member.user_metadata.admin || false;
+      metadata_state.invitation = $member.user_metadata.invitation || {
         token: '',
         email: '',
         accepted: false
       };
-      metadata_state.reset_token = userStore.appUser.user_metadata.reset_token || '';
-      metadata_state.subscription_plan = userStore.appUser.user_metadata.plan || {
+      metadata_state.reset_token = $member.user_metadata.reset_token || '';
+      metadata_state.subscription_plan = $member.user_metadata.plan || {
         id: 1,
         name: 'Free',
         description: 'Free plan with limited features',
@@ -163,30 +180,14 @@
   })
 
 
-  // Stores:
-  import {
-    addressesStore,
-    initAddressesStore,
-    addresses as userAdresses,
-    createAddress,
-    updateAddress,
-    deleteAddress,
-    setPrimaryAddress
-  } from '$lib/stores/addresses.svelte';
-	import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
 
 
   // lifecycle
-  onMount(() => {
-    // console.log('Account page mounted. User:', userStore.appUser);
-    if(!userStore.appUser) {
-      throw error(404, 'User not found');
-    }
-    initAddressesStore(userStore.appUser?.addresses, supabase, userStore.appUser?.id || '');
-  });
+  // The member store is initialised in the root layout; it fetches the member
+  // and seeds the addresses / payment-method stores, so nothing to do here.
 
 
-  // const addresses = addressesStore.fetchAddressesByUser(userStore.appUser?.id || '');
+  // const addresses = addressesStore.fetchAddressesByUser(memberStore.Member?.id || '');
   let visibleAddresses = $derived($userAdresses ?? []);
   // console.log('Account page - visibleAddresses:', visibleAddresses);
 
@@ -297,9 +298,9 @@
 		}
 		// console.log('Public URL: ', urlData.publicUrl);
 		pfp_state.pfp.url = urlData.publicUrl || '';
-		if(userStore.appUser) {
-		  userStore.appUser.user_metadata.pfp_url = urlData.publicUrl || '';
-		}
+		member.update((m) =>
+			m ? { ...m, user_metadata: { ...m.user_metadata, pfp_url: urlData.publicUrl || '' } } : m
+		);
 
 		// update user account with new pfp url
 		await update_user_pfp();
@@ -322,8 +323,9 @@
 		}
 	};
 	const toggle_admin = async () => {
-	  if(!userStore.appUser) return;
-    const new_admin_status = !userStore.appUser.user_metadata.admin;
+	  const currentMember = $member;
+	  if(!currentMember) return;
+    const new_admin_status = !currentMember.user_metadata.admin;
     const result = await fetch(`/api/auth/toggle-admin/${user.id}`, {
       method: 'POST',
       headers: {
@@ -335,7 +337,9 @@
     });
 
     if (result.ok) {
-      userStore.appUser.user_metadata.admin = new_admin_status;
+      member.update((m) =>
+        m ? { ...m, user_metadata: { ...m.user_metadata, admin: new_admin_status } } : m
+      );
       handle_toast(`Admin status updated to ${new_admin_status}`, "success");
     } else {
       console.error('Error updating admin status: ', result.statusText);

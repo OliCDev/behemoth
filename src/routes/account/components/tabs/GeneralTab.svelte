@@ -26,7 +26,7 @@
 
   // types
   import type { User } from '@supabase/supabase-js';
-  import type { UserAddress, UserMetadata } from '$lib/types/user';
+  import type { MemberAddress, MemberMetadata } from '$lib/types/member';
   // Props
   let {
     user = $bindable(),
@@ -37,11 +37,10 @@
 
 
   // store
-  import { getUserStore } from '$lib/stores/user.svelte';
-	const userStore = getUserStore();
+  import { member, fetchMember } from '$lib/stores/member.svelte';
 
-	// debug
-	// console.log('Account page - userStore - User:', userStore.appUser);
+
+	// console.log('Account page - member:', $member);
 
 
   // lifecycle
@@ -59,7 +58,7 @@
       edit: {
         address: {
           open: false,
-          item: null as UserAddress | null
+          item: null as MemberAddress | null
         }
       },
       create: {
@@ -67,7 +66,7 @@
           open: false,
           item: {
             id: null,
-            user_id: userStore.appUser?.id || '',
+            user_id: $member?.id || '',
             label: '',
             primary: false,
             address_line1: '',
@@ -82,7 +81,7 @@
       delete:{
         address: {
           open: false,
-          item: null as UserAddress | null
+          item: null as MemberAddress | null
         }
       }
 
@@ -99,18 +98,12 @@
   } from '$lib/stores/addresses.svelte';
 
 
-  // lifecycle
-  onMount(() => {
-
-  });
-
-
-
-  // const addresses = addressesStore.fetchAddressesByUser(userStore.appUser?.id || '');
+  // const addresses = addressesStore.fetchAddressesByUser(memberStore.Member?.id || '');
   let visibleAddresses = $derived($userAdresses ?? []);
   // console.log('Account page - visibleAddresses:', visibleAddresses);
 
-  let appUser = $state(userStore.appUser ?? null);
+
+  // console.log('Account page - Member:', Member);
   const default_pfp =
 		'https://uqseuzmnwuthgorjvrdi.supabase.co/storage/v1/object/sign/img/Users/pfp_default.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYTdiMWM0Zi0wNTYzLTRmZTQtYTA0Yy0wMmZiZWViYzYwOWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWcvVXNlcnMvcGZwX2RlZmF1bHQuYXZpZiIsImlhdCI6MTc2MzYxMTY0MywiZXhwIjoxNzk1MTQ3NjQzfQ.7f3p36JtVhzE3-5xeo5A9JlIizORlYAQxup3_R9Hayk';
 
@@ -139,27 +132,32 @@
         billing_interval: 'month',
         created_at: new Date().toISOString(),
       }
-    } as UserMetadata ,
+    } as MemberMetadata ,
     success: '',
     error: ''
   })
+
+  let hydrated = false;
   $effect(() => {
-    if (userStore.appUser) {
-      meta.data.username = userStore.appUser.user_metadata.username || '';
-      meta.data.email = userStore.appUser.user_metadata.email || '';
-      meta.data.pfp = userStore.appUser.user_metadata.pfp_url || default_pfp;
-      meta.data.first_name = userStore.appUser.user_metadata.first_name || '';
-      meta.data.last_name = userStore.appUser.user_metadata.last_name || '';
-      meta.data.phone_number = userStore.appUser.user_metadata.phone_number || '';
-      meta.data.pronouns = userStore.appUser.user_metadata.pronouns || '';
-      meta.data.admin = userStore.appUser.user_metadata.admin || false;
-      meta.data.invitation = userStore.appUser.user_metadata.invitation || {
+
+    if ($member && !hydrated) {
+      hydrated = true;
+      // console.log('effect member:', $member);
+      meta.data.username = $member.user_metadata.username || '';
+      meta.data.email = $member.user_metadata.email || '';
+      meta.data.pfp = $member.user_metadata.pfp_url || default_pfp;
+      meta.data.first_name = $member.user_metadata.first_name || '';
+      meta.data.last_name = $member.user_metadata.last_name || '';
+      meta.data.phone_number = $member.user_metadata.phone_number || '';
+      meta.data.pronouns = $member.user_metadata.pronouns || '';
+      meta.data.admin = $member.user_metadata.admin || false;
+      meta.data.invitation = $member.user_metadata.invitation || {
         token: '',
         email: '',
         accepted: false
       };
-      meta.data.reset_token = userStore.appUser.user_metadata.reset_token || '';
-      meta.data.subscription_plan = userStore.appUser.user_metadata.plan || {
+      meta.data.reset_token = $member.user_metadata.reset_token || '';
+      meta.data.subscription_plan = $member.user_metadata.plan || {
         id: 1,
         name: 'Free',
         description: 'Free plan with limited features',
@@ -172,7 +170,7 @@
   })
 
 	onDestroy(() => {
-	  console.log('Account page destroyed.');
+	  console.log('General Tab destroyed.');
 	});
 
   // functions
@@ -202,8 +200,25 @@
       } else {
         general_state.success = 'User updated successfully!';
   			general_state.error = '';
+        let res = await result.json();
+        console.log('User account updated successfully: ', res  );
+
         onsuccess("green", general_state.success);
   			await tick();
+        // Sync the freshly persisted auth metadata into the store so other
+        // views (navbar, account header) reflect the change without a reload.
+        if (res?.user?.user_metadata) {
+          member.update((m) =>
+            m
+              ? {
+                  ...m,
+                  user_metadata: res.user.user_metadata,
+                  metadata: { ...m.metadata, ...res.user.user_metadata }
+                }
+              : m
+          );
+        }
+        meta.data = res?.user?.user_metadata
   			setTimeout(() => {
   				meta.success = '';
   			}, 3000);
@@ -227,7 +242,7 @@
 	const reset_create_address = () => {
 		general_state.create.address.item = {
 			id: null,
-			user_id: userStore.appUser?.id || '',
+			user_id: user.id || '',
 			label: '',
 			primary: false,
 			address_line1: '',
@@ -258,8 +273,8 @@
 	const handle_create_address = async () => {
 		const item = general_state.create.address.item;
 		if (!item) return;
-		const { id, created_at, updated_at, ...payload } = item as UserAddress;
-		payload.user_id = userStore.appUser?.id || '';
+		const { id, created_at, updated_at, ...payload } = item as MemberAddress;
+		payload.user_id = $member?.id || '';
 		const res = await createAddress(payload);
 		if (res?.success) {
 			general_state.create.address.open = false;
@@ -274,7 +289,7 @@
 	const handle_update_address = async () => {
 		const item = general_state.edit.address.item;
 		if (!item?.id) return;
-		const { id, created_at, updated_at, ...updates } = item as UserAddress;
+		const { id, created_at, updated_at, ...updates } = item as MemberAddress;
 		const res = await updateAddress(id as string, updates);
 		if (res?.success) {
 			general_state.edit.address.open = false;
@@ -520,8 +535,8 @@
               <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.country}</p>
             </div>
           {/each}
-        {:else}
-          <p class="text-neutral-600 dark:text-neutral-400 mb-0">No addresses found.</p>
+        <!-- {:else}
+          <p class="text-neutral-600 dark:text-neutral-400 mb-0">No addresses found.</p> -->
         {/if}
         <div class={account_new_item_class}>
           <button

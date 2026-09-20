@@ -14,12 +14,10 @@
 	const user = $derived(session?.user);
 
 	// Store
-	import { setUserStore } from '$lib/stores/user.svelte';
-	// svelte-ignore state_referenced_locally
-	const userStore = setUserStore(supabase, data.user)
+	import { initMemberStore, cleanupMemberStore } from '$lib/stores/member.svelte';
 	$effect(() => {
-		userStore.load();
-		const ch = userStore.subscribeRealtime(); return () => ch?.unsubscribe();
+		initMemberStore(data.user, supabase);
+		return () => cleanupMemberStore();
 	});
 
 	// Components

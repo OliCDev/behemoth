@@ -1,11 +1,11 @@
 import { writable, get } from 'svelte/store';
 import type { SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { getRealtimeChannel, supabase as globalSupabase } from '$lib/supabaseClient';
-import type { UserPaymentMethod } from '$lib/types/user';
+import type { MemberPaymentMethod } from '$lib/types/member';
 
 const createPaymentMethodsStore = () => {
 	// ─── Core State ────────────────────────────────────────────────────────────
-	const paymentMethods = writable<UserPaymentMethod[] | null>(null);
+	const paymentMethods = writable<MemberPaymentMethod[] | null>(null);
 	const loading = writable(false);
 	const error = writable<string | null>(null);
 
@@ -19,7 +19,7 @@ const createPaymentMethodsStore = () => {
 	// Omit `userId` (or pass null) for an unscoped/admin view of every user's
 	// payment methods.
 	const init = async (
-		initialPaymentMethods: UserPaymentMethod[],
+		initialPaymentMethods: MemberPaymentMethod[],
 		supabase: SupabaseClient,
 		userId: string | null = null
 	) => {
@@ -98,7 +98,7 @@ const createPaymentMethodsStore = () => {
 
 	// ─── CRUD ──────────────────────────────────────────────────────────────────
 	const createPaymentMethod = async (
-		item: Omit<UserPaymentMethod, 'id' | 'created_at' | 'updated_at'>
+		item: Omit<MemberPaymentMethod, 'id' | 'created_at' | 'updated_at'>
 	) => {
 		if (!_supabase) return { error: 'Store not initialised' };
 		loading.set(true);
@@ -106,7 +106,7 @@ const createPaymentMethodsStore = () => {
 			.from('user_payment_methods')
 			.insert(item)
 			.select()
-			.single<UserPaymentMethod>();
+			.single<MemberPaymentMethod>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);
@@ -116,7 +116,7 @@ const createPaymentMethodsStore = () => {
 		return { success: true, paymentMethod: data };
 	};
 
-	const updatePaymentMethod = async (id: string, updates: Partial<UserPaymentMethod>) => {
+	const updatePaymentMethod = async (id: string, updates: Partial<MemberPaymentMethod>) => {
 		if (!_supabase) return { error: 'Store not initialised' };
 		loading.set(true);
 		const { data, error: err } = await _supabase
@@ -124,7 +124,7 @@ const createPaymentMethodsStore = () => {
 			.update(updates)
 			.eq('id', id)
 			.select()
-			.single<UserPaymentMethod>();
+			.single<MemberPaymentMethod>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);
@@ -177,7 +177,7 @@ const createPaymentMethodsStore = () => {
 			.update({ primary: true })
 			.eq('id', id)
 			.select()
-			.single<UserPaymentMethod>();
+			.single<MemberPaymentMethod>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);

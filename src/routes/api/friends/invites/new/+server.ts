@@ -4,11 +4,13 @@ import type { RequestHandler } from '@sveltejs/kit';
 // Resend:
 import { Resend } from 'resend';
 import { RESEND_API_KEY } from '$env/static/private';
-
+import { PUBLIC_SUPABASE_URL, PUBLIC_PRIMARY_COLOR, PUBLIC_SECONDARY_COLOR, PUBLIC_TERTIARY_COLOR } from '$env/static/public';
 
 // import logo from '$lib/assets/img/bbs_logo.webp'
-const logo = 'https://foodnotbombs-tpa.app/assets/img/bbs_logo.webp', // Absolute URL for email embedding
-  base_color = '#312c85'
+const logo = 'https://behemoth.olic.dev/assets/img/bbs_logo.webp', // Absolute URL for email embedding
+    primary_color = PUBLIC_PRIMARY_COLOR || '#fc9700',
+    secondary_color = PUBLIC_SECONDARY_COLOR || '#f2f6f9',
+    tertiary_color = PUBLIC_TERTIARY_COLOR || '#ffffff';
 
 const resend = new Resend(RESEND_API_KEY);
 
@@ -24,8 +26,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
      send the email.
       - If not a user:
      - Send email invite to the email address with a link to join the pod
-     - The link will direct them to a signup page with the pod ID as a parameter
-     - After signup, they will be added to the pod members list
+     - The link will direct them to a signup page with the  ID as a parameter
+     - After signup, they will be added to the members table
 
   */
 
@@ -63,13 +65,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   // Send the invitation email using Resend
   // const inviteLink = `${PUBLIC_BASE_URL}?invitation_token=${inviteToken}&email=${email}`;
-  const inviteLink = `https://foodnotbombs-tpa.app?invitation_token=${inviteToken}&email=${encodeURIComponent(email)}`;
+  const inviteLink = `https://behemoth.olic.dev?invitation_token=${inviteToken}&email=${encodeURIComponent(email)}`;
 
   if (!userData) {
 
     try {
       const { data: emailData, error: emailError } = await resend.emails.send({
-        from: `team@foodnotbombs-tpa.app`,
+        from: `team@behemoth.olic.dev`,
         to: [email],
         subject: `${invited_by_name} has invited you to join Behemoth Battle School!`,
         html: `
@@ -83,8 +85,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                 <table width="100%" style="max-width:520px; background:#ffffff; border-radius:10px; overflow:hidden;" cellpadding="0" cellspacing="0">
 
                   <tr>
-                    <td align="center" style="padding:25px; background:${base_color};">
-                      <img src="${logo}" alt="TFNB Logo" width="70" style="display:block; margin-bottom:10px;" />
+                    <td align="center" style="padding:25px; background:${tertiary_color};">
+                      <img src="${logo}" alt="BBS Logo" width="70" style="display:block; margin-bottom:10px;" />
                       <h2 style="margin:0; color:#ffffff; font-weight:700; font-size:20px;">Behemoth Battle School</h2>
                     </td>
                   </tr>
@@ -95,7 +97,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
                       <table cellspacing="0" cellpadding="0" style="margin:25px auto;">
                         <tr>
-                          <td align="center" style="background:${base_color}; padding:14px 30px; border-radius:6px;">
+                          <td align="center" style="background:${primary_color}; padding:14px 30px; border-radius:6px;">
                             <a href="${inviteLink}" target="_blank"
                               style="color:white; text-decoration:none; font-weight:bold; font-size:16px;">
                               Continue and Join!
@@ -109,8 +111,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
                   </tr>
 
                   <tr>
-                    <td align="center" style="padding:15px; background:${base_color}; color:#ffffff; font-size:12px;">
-                      Need help? Reach out to K or Oli.
+                    <td align="center" style="padding:15px; background:${primary_color}; color:#ffffff; font-size:12px;">
+                      Need help? Reach out to your Sifu <br/>
+                      Sent with ❤️ from Tampa by Behemoth Battle School
                     </td>
                   </tr>
 

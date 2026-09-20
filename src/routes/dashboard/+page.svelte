@@ -9,17 +9,18 @@
 
 	// Components
 	import { Modal, Toggle, Spinner, Tooltip } from 'flowbite-svelte';
-	import FriendCard from './components/FriendCard.svelte';
+	import AdminInterface from './components/admin/Interface.svelte'
 
 	// Utils
-	import { containerClasses } from '$lib/utils/style';
+	import { containerClasses, card_class } from '$lib/utils/style';
 
 	// form data from server and layout data
 	let { data } = $props<{ data?: any }>();
 
 	// Access user and profile from layout data
 	const user = $derived(data?.user),
-		friends = $derived(data?.friends);
+		friends = $derived(data?.friends),
+		supabase = $derived(data?.supabase);
 
 	// Debug:
 	// svelte-ignore state_referenced_locally
@@ -61,13 +62,6 @@
 		}
 	});
 
-	// Log when user is available
-	$effect(() => {
-		if (user) {
-			// console.log('Dashboard - User:', user);
-			// console.log('Dashboard - Friends:', friends);
-		}
-	});
 
 	// Ignore type error:
 	// @ts-ignore - Supabase types don't work well with Svelte's reactivity
@@ -229,7 +223,7 @@
 >
 	<div
 		id="greetbox"
-		class="mx-auto mt-8 flex w-full flex-col rounded-lg bg-white/60 p-6 shadow-xl dark:bg-white/10"
+		class={`mx-auto mt-8 flex w-full flex-col font-primary ${card_class}`}
 	>
 		<h1
 			class="mx-2 mt-6 text-3xl font-bold text-neutral-600 md:text-6xl lg:text-9xl dark:text-neutral-200"
@@ -237,22 +231,19 @@
 			Hello,
 			<span class="lowercase">{user?.user_metadata?.first_name || 'warrior'}!</span>
 		</h1>
-		<p class="m-2 text-2xl font-thin text-neutral-600 md:text-6xl dark:text-neutral-200">
+		<p class="m-2 text-2xl font-thin text-neutral-600 md:text-6xl dark:text-neutral-200 ">
 			{dashboard_state.clock}
 		</p>
 	</div>
 	<div class="flex flex-col lg:flex-row gap-4">
 		<div
 			id="dashboard-main"
-			class=" mx-auto flex   w-full  flex-col gap-4 rounded-lg bg-white/60 px-2 py-4 shadow-xl md:p-6 dark:bg-white/10"
+			class={`mx-auto flex w-full flex-col gap-4`}
 			transition:fade={{ duration: 200 }}
 		>
 			{#if user?.user_metadata?.admin}
-				<div id="dashboard-main-row" class="flex w-full flex-row">
-				  <p class="text-center text-xl text-neutral-600 dark:text-neutral-200">
-				    Welcome to the {app_name} dashboard, {user?.user_metadata?.first_name || 'warrior'}! You are an admin.
-						</p>
-				</div>
+			  <AdminInterface {user} {supabase} />
+
 			{:else}
 			<div class="align-center my-auto flex flex-col items-center justify-center p-4">
 				<p class="text-center text-xl text-neutral-600 dark:text-neutral-200">

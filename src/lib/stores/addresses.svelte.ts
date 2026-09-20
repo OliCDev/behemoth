@@ -1,11 +1,11 @@
 import { writable, get } from 'svelte/store';
 import type { SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { getRealtimeChannel, supabase as globalSupabase } from '$lib/supabaseClient';
-import type { UserAddress } from '$lib/types/user';
+import type { MemberAddress } from '$lib/types/member';
 
 const createAddressesStore = () => {
 	// ─── Core State ────────────────────────────────────────────────────────────
-	const addresses = writable<UserAddress[] | null>(null);
+	const addresses = writable<MemberAddress[] | null>(null);
 	const loading = writable(false);
 	const error = writable<string | null>(null);
 
@@ -19,7 +19,7 @@ const createAddressesStore = () => {
 	// Omit `userId` (or pass null) for an unscoped/admin view of every user's
 	// addresses.
 	const init = async (
-		initialAddresses: UserAddress[],
+		initialAddresses: MemberAddress[],
 		supabase: SupabaseClient,
 		userId: string | null = null
 	) => {
@@ -97,14 +97,14 @@ const createAddressesStore = () => {
 	const fetchAllAddresses = () => fetchAddresses(null);
 
 	// ─── CRUD ──────────────────────────────────────────────────────────────────
-	const createAddress = async (item: Omit<UserAddress, 'id' | 'created_at' | 'updated_at'>) => {
+	const createAddress = async (item: Omit<MemberAddress, 'id' | 'created_at' | 'updated_at'>) => {
 		if (!_supabase) return { error: 'Store not initialised' };
 		loading.set(true);
 		const { data, error: err } = await _supabase
 			.from('user_addresses')
 			.insert(item)
 			.select()
-			.single<UserAddress>();
+			.single<MemberAddress>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);
@@ -114,7 +114,7 @@ const createAddressesStore = () => {
 		return { success: true, address: data };
 	};
 
-	const updateAddress = async (id: string, updates: Partial<UserAddress>) => {
+	const updateAddress = async (id: string, updates: Partial<MemberAddress>) => {
 		if (!_supabase) return { error: 'Store not initialised' };
 		loading.set(true);
 		const { data, error: err } = await _supabase
@@ -122,7 +122,7 @@ const createAddressesStore = () => {
 			.update(updates)
 			.eq('id', id)
 			.select()
-			.single<UserAddress>();
+			.single<MemberAddress>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);
@@ -173,7 +173,7 @@ const createAddressesStore = () => {
 			.update({ primary: true })
 			.eq('id', id)
 			.select()
-			.single<UserAddress>();
+			.single<MemberAddress>();
 		loading.set(false);
 		if (err) {
 			error.set(err.message);
