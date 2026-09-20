@@ -28,6 +28,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       metadata: {
         username: newMetadata?.username,
         pronouns: newMetadata?.pronouns,
+        email: newMetadata?.email,
         pfp: newMetadata?.pfp,
         admin: newMetadata?.admin,
         first_name: newMetadata?.first_name,
@@ -40,7 +41,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     .eq('user_id', user?.id);
 
   if (membersError) {
-    console.error('Error updating friends table:', membersError);
+    console.error('Error updating members table:', membersError);
     return json({ success: false, error: membersError.message }, { status: 500 });
   }
 

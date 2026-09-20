@@ -1,32 +1,49 @@
 <script lang="ts">
-
-
   // Types
   import type { User } from '@supabase/supabase-js';
+  import type { Member } from '$lib/types/member';
 
   // Props
   let {
     user = $bindable(),
     supabase = $bindable(),
-  } = $props<{ user: User, supabase: any  }>();
+    members = $bindable()
+  } = $props<{ user: User, supabase: any, members: Member[] }>();
     // onsuccess = () => {},
     // onerror = () => {}
   // } = $props<{ user: User, supabase: any, onsuccess: () => void, onerror: () => void }>();
+
+
+  // Components
+  import Students from './Students.svelte';
 
   const now = new Date();
 	const admin_state = $state({
 		error: '',
 		success: '',
-		clock: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
 		loading: {
 			leading: true,
 			member: true
+		},
+		sections: {
+		  students: {
+				expanded: false
+				},
+			chambers: {
+        expanded: false
+        },
+      events: {
+        expanded: false
+        },
+      plans: {
+        expanded: false
+        }
 		},
 		deleting: {
 			leading: false,
 			member: false,
 			modal_open: false,
-			target_friend_id: 0 as number | null
+			target_member_id: 0 as number | null
 		},
 		invite: {
 			modal_open: false,
@@ -38,53 +55,20 @@
 			},
 			sending: false
 		},
-		friend_search: {
+		member_search: {
 			query: ''
 		}
 	});
-	// Functions
-	const clock = () => {
-		setInterval(() => {
-			const now = new Date();
-			admin_state.clock = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		}, 1000);
-	};
-	clock();
 
-	const searchFriends = () => {
-		friendSearchResults = friends
-			? friends
-					.filter((friend: Friend) =>
-						friend.username
-							? friend.username
-									.toLowerCase()
-									.includes(admin_state.friend_search.query.toLowerCase())
-							: false
-					)
-					.map((friend: Friend) => ({
-						id: friend.id,
-						username: friend?.username || friend?.member || 'Unknown',
-						pfp: friend?.pfp || '/default_pfp.png',
-						admin: friend?.admin || false,
-						metadata: friend?.metadata || {
-							pronouns: '',
-							admin: false,
-							email: '',
-							pfp: '/default_pfp.png',
-							username: friend?.username || friend?.member || 'Unknown'
-						},
-					}))
-			: [];
-	};
-	const toggleAdmin = async (friend: Friend) => {
+
+	const toggleAdmin = async (member: Member) => {
 		// Optimistically update UI — $state deeply tracks these mutations
-		friend.metadata.admin = !friend.metadata.admin;
-		friend.admin = friend.metadata.admin;
-		let metadata = friend.metadata;
+		member.metadata.admin = !member.metadata.admin;
+		let metadata = member.metadata;
 
 		// console.log('metadata being sent to server for update: ', metadata);
 		try {
-			const result = await fetch(`/api/user/update/${friend.member}`, {
+			const result = await fetch(`/api/user/update/${member.user_id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -100,7 +84,7 @@
 	const sendInvite = async () => {
 		admin_state.invite.sending = true;
 		try {
-			const response = await fetch(`/api/friends/invites/new`, {
+			const response = await fetch(`/api/members/invites/new`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -134,5 +118,14 @@
 			admin_state.invite.status.error = 'Failed to send invite. Please try again.';
 		}
 	};
-
+	type SectionKey = 'students' | 'chambers' | 'events' | 'plans';
+	const toggle_expand = (sectionKey:SectionKey) => {
+  (Object.keys(admin_state.sections) as SectionKey[]).forEach((key) => {
+  		admin_state.sections[key].expanded = key === sectionKey ? !admin_state.sections[key].expanded : false;
+  	});
+	}
 </script>
+
+<div class="flex w-full flex-col gap-4 lg:flex-row xl:gap-2">
+  <Students {user} {supabase} {members} expanded={admin_state.sections.students.expanded} toggleExpand={() => toggle_expand('students')} />
+</div>

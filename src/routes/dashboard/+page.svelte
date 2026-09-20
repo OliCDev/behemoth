@@ -20,11 +20,13 @@
 	// Access user and profile from layout data
 	const user = $derived(data?.user),
 		friends = $derived(data?.friends),
+		members = $derived(data?.members),
 		supabase = $derived(data?.supabase);
 
 	// Debug:
 	// svelte-ignore state_referenced_locally
 	console.log('Dashboard - User:', user);
+	// console.log('Dashboard - Members:', members);
 	// console.log('Dashboard - Friends:', friends);
 
 	const app_name = 'Behemoth Battle School';
@@ -242,7 +244,7 @@
 			transition:fade={{ duration: 200 }}
 		>
 			{#if user?.user_metadata?.admin}
-			  <AdminInterface {user} {supabase} />
+			  <AdminInterface {user} {supabase} {members} />
 
 			{:else}
 			<div class="align-center my-auto flex flex-col items-center justify-center p-4">
