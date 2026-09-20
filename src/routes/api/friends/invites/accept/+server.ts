@@ -55,7 +55,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   );
 
   const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
-  
+
   if (usersError) {
     console.error('Error listing users:', usersError);
     return json({ success: false, error: usersError.message }, { status: 500 });
@@ -66,25 +66,24 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (!user) {
     console.error('No user found with the invited email');
     return json({ success: false, error: 'No user found with the invited email' }, { status: 400 });
-  } 
-  
+  }
 
 
-  // add to friends table:
-  const { data, error: friendError } = await locals.supabase
-    .from('friends')
+
+  // add to members table:
+  const { data, error: memberError } = await locals.supabase
+    .from('members')
     .insert({
-      member: user.id,
-      username: user.user_metadata.username,
+      user_id: user.id,
       pfp: user.user_metadata.pfp,
       admin: user.user_metadata.admin,
       metadata: user.user_metadata.metadata,
-      email: user.email
+      // email: user.email
     });
 
-  if (friendError) {
-    console.error('Error adding friend after accepting invitation:', friendError);
-    return json({ success: false, error: friendError.message }, { status: 500 });
+  if (memberError) {
+    console.error('Error adding member after accepting invitation:', memberError);
+    return json({ success: false, error: memberError.message }, { status: 500 });
   }
 
   // Delete the invitation after acceptance

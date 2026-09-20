@@ -356,7 +356,7 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
           <Swords size={10}  color={`${ dark_mode ? 'white' : 'black' }`} strokeWidth={2} />
           {/snippet}
         <div class="flex flex-row flex-1">
-          <P>{toast.message}</P>
+          <P class="text-xs">{toast.message}</P>
         </div>
       </Toast>
     {/each}

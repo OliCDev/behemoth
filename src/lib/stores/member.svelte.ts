@@ -44,11 +44,11 @@ const createMemberStore = () => {
 	// seeds the relational sub-stores, then wires up realtime.
 	const init = async (authUser: User | null, supabase: SupabaseClient) => {
 		const userId = authUser?.id ?? null;
-		// Idempotent: if we're already initialised for this same user (and Supabase
-		// client), just refresh the data. Tearing down and re-adding the realtime
-		// channel would throw, because Supabase reuses channels by topic and forbids
-		// adding `postgres_changes` callbacks after `subscribe()`. This guards against
-		// `init` being invoked from more than one place (e.g. the layout and a page).
+/* 		Idempotent: if we're already initialised for this same user (and Supabase
+		client), just refresh the data. Tearing down and re-adding the realtime
+		channel would throw, because Supabase reuses channels by topic and forbids
+		adding `postgres_changes` callbacks after `subscribe()`. This guards against
+		`init` being invoked from more than one place (e.g. the layout and a page). */
 		if (_supabase === supabase && _userId === userId && _channel) {
 			if (userId) await fetchMember(userId);
 			return;

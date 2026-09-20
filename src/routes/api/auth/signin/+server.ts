@@ -47,7 +47,53 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     }
 
     // create new customer in Square:
+    const { data: squareCustomerData, error: squareCustomerError } = await fetch('/api/square/customers/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: user?.email,
+        name: `${user?.user_metadata.first_name} ${user?.user_metadata.last_name}`,
+      }),
+    }).then(res => res.json());
 
+    if (squareCustomerError) {
+      console.error('Error creating Square customer:', squareCustomerError);
+      return json({ success: false, error: squareCustomerError.message }, { status: 500 });
+    }
+
+    // Update user metadata with Square customer ID
+    const { error: updateSquareIdError } = await locals.supabase.auth.updateUser({
+      data: {
+        ...user.user_metadata,
+        square_customer_id: squareCustomerData?.id,
+      },
+    });
+
+    if (updateSquareIdError) {
+      console.error('Error updating user metadata with Square customer ID:', updateSquareIdError);
+      return json({ success: false, error: updateSquareIdError.message }, { status: 500 });
+    }
+
+    // Update members table with Square customer ID
+    const { error: updateMembersError } = await locals.supabase
+      .from('members')
+      .update({
+        metadata: {
+          ...user.user_metadata,
+          square:
+            {
+              customer_id: squareCustomerData?.id,
+            },
+          },
+      })
+      .eq('user_id', user?.id);
+
+    if (updateMembersError) {
+      console.error('Error updating members table with Square customer ID:', updateMembersError);
+      return json({ success: false, error: updateMembersError.message }, { status: 500 });
+    }
 
   }
 

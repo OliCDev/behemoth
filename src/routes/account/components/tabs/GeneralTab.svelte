@@ -46,12 +46,7 @@
   // lifecycle
   import { onMount, onDestroy, tick } from 'svelte';
 
-
-
-
-
   // state
-
   const general_state = $state({
   		success: '',
   		error: '',
