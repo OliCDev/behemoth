@@ -91,9 +91,9 @@
 	<div
 		id="ctr-students"
 		transition:slide={{ duration: 300 }}
-		class={`${card_class + ( expanded ? ' lg:w-full' : ' lg:w-2/3 ')} h-[50vh] overflow-y-scroll flex flex-col items-start justify-start px-4 py-4 shadow-xl transition-all duration-300 xl:mx-2 `}
+		class={`${card_class + ( expanded ? ' w-full lg:w-full' : ' w-full lg:w-2/3 ')} h-[50vh] overflow-y-scroll flex flex-col items-start justify-start px-4 py-4 shadow-xl transition-all duration-300 xl:mx-2 `}
 	>
-	  <div class={`${expanded ? ' lg:w-2/3' : ' lg:w-full '}`}>
+	  <div class={`${expanded ? ' w-full lg:w-2/3' : ' w-full lg:w-full '}`}>
   	  <div class="ctr-student_search w-full flex flex-row justify-center items-center gap-2 mb-2">
   			<input type="search" class={`${input_class} w-full`} placeholder="Search students..." bind:value={students_state.member_search.query} />
   			<i class="fa-solid fa-magnifying-glass text-neutral-800 dark:text-neutral-200"></i>
