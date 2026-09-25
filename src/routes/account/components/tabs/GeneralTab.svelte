@@ -15,6 +15,7 @@
 
 	// Components
 	import AddressForm from '../AddressForm.svelte';
+	import PhoneInput from '$lib/components/global/PhoneInput.svelte';
 
 	// Data
 	// const supabase = $derived($page.data.supabase), user = $derived($page.data.user);
@@ -381,12 +382,7 @@
         </div>
         <div class="w-full lg:w-2/5 flex flex-col justify-start items-start gap-1">
           <Label>Phone number</Label>
-          <input
-            id="phone"
-            type="phone"
-            bind:value={meta.data.phone_number}
-            class={input_class}
-          />
+          <PhoneInput bind:value={meta.data.phone_number} />
         </div>
       </div>
     </div>
