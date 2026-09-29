@@ -67,18 +67,6 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     });
     */
 
-    // Create member object based on user metadata, 'members' table, 'user_payment_methods' table, and 'user_addresses' table. Then send this object to the Square API to create a new customer.
-    const { data: address, error: addressError } = await locals.supabase
-      .from('user_addresses')
-      .select('*')
-      .eq('user_id', user?.id)
-      .single();
-
-    if (addressError) {
-      console.error('Error fetching user address:', addressError);
-      return json({ success: false, error: addressError.message }, { status: 500 });
-    }
-
     const { data: squareCustomerData, error: squareCustomerError } = await fetch('/api/square/customers/create', {
       method: 'POST',
       headers: {
@@ -89,12 +77,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         familyName: user?.user_metadata.last_name,
         emailAddress: user?.user_metadata?.email,
         address: {
-          addressLine1: address?.line1 || user?.user_metadata.addresses?.[0]?.line1 || '',
-          addressLine2: address?.line2 || user?.user_metadata.addresses?.[0]?.line2 || '',
-          locality: address?.city || user?.user_metadata.addresses?.[0]?.city || '',
-          administrativeDistrictLevel1: address?.state || user?.user_metadata.addresses?.[0]?.state || '',
-          postalCode: address?.postal_code || user?.user_metadata.addresses?.[0]?.postal_code || '',
-          country: address?.country || user?.user_metadata.addresses?.[0]?.country || '',
+          addressLine1: user?.user_metadata.addresses?.[0]?.line1 || '',
+          addressLine2: user?.user_metadata.addresses?.[0]?.line2 || '',
+          locality: user?.user_metadata.addresses?.[0]?.city || '',
+          administrativeDistrictLevel1:   user?.user_metadata.addresses?.[0]?.state || '',
+          postalCode:  user?.user_metadata.addresses?.[0]?.postal_code || '',
+          country:  user?.user_metadata.addresses?.[0]?.country || '',
         },
         phoneNumber: user?.user_metadata.phone_number || '',
         referenceId: user?.id,
