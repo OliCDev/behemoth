@@ -71,7 +71,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
     try {
       const { data: emailData, error: emailError } = await resend.emails.send({
-        from: `team@behemoth.olic.dev`,
+        from: `team@olic.dev`,
         to: [email],
         subject: `${invited_by_name} has invited you to join Behemoth Battle School!`,
         html: `

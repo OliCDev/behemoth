@@ -129,6 +129,7 @@
 			} catch (error) {
 				console.error('Error inviting member:', error);
 				students_state.invite.status.error = 'Failed to send invite. Please try again.';
+				console.log('Invite process failed. Sending state reset to false: ', students_state.invite.status.error);
 			} finally {
         students_state.invite.sending = false;
         console.log('Invite process completed. Sending state reset to false.');

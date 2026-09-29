@@ -10,7 +10,18 @@
  	// svelte-ignore non_reactive_update
  	let dark_mode : boolean = false;
   dark_mode = browser && window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches;
-
+  import { onMount } from 'svelte';
+  onMount(() => {
+    // detect invitation_token and email in URL query params and redirect to login page with those params
+    if(browser) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const invitation_token = urlParams.get('invitation_token');
+      const email = urlParams.get('email');
+      if (invitation_token && email) {
+        window.location.href = `/login?signup=true&invitation_token=${invitation_token}&email=${email}`;
+      }
+    }
+  })
 
 </script>
 
