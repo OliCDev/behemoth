@@ -29,6 +29,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         },
         reset_token: '',
         member: false,
+        square: false,
         subscription_plan: {
           id: 1,
           name: 'Free',

@@ -42,6 +42,7 @@ export type MemberMetadata = {
     accepted: boolean; },
   reset_token: string;
   member: boolean;
+  square: boolean;
   subscription_plan: {
     id: 1;
     name: 'Free';

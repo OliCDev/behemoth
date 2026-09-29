@@ -14,8 +14,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const { newUser } = await request.json();
   console.log('Creating new customer in Square:', newUser);
 
-  await client.customers.create(newUser);
+ const newSquareCustomer = await client.customers.create(newUser);
 
-
-  return json({ success: true, message: 'Customer creation endpoint is under construction.' });
+  return json({ success: true, newSquareCustomer });
 }
