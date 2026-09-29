@@ -70,7 +70,7 @@
         success: '',
         error: ''
       },
-      sending: false
+      sending: false,
     },
     member_search: {
       query: ''
@@ -90,14 +90,69 @@
       );
     });
   }
-	console.log('Students component - visibleStudents:', filteredStudents(visibleStudents));
+	// console.log('Students component - visibleStudents:', filteredStudents(visibleStudents));
 
 	// functions
-	  const invite_new_student = async () => {}
+	  const invite_new_student = async () => {
+			console.log('Inviting new student with email:', students_state.invite.email);
+			students_state.invite.sending = true;
+			try {
+				const response = await fetch(`/api/students/invites/new`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						email: students_state.invite.email,
+						invited_by: user?.id,
+						invited_by_name: user?.user_metadata?.username ?? 'A warrior'
+					})
+				});
+				const data = await response.json();
+				if (data.success) {
+					students_state.invite.status.success = 'Invite sent successfully!';
+					students_state.invite.email = '';
+					students_state.invite.sending = false;
+					students_state.invite.cta = 'Add Another';
+
+					// // delay
+					// setTimeout(() => {
+					// 	students_state.invite.modal_open = false;
+					// 	students_state.invite.status.success = '';
+					// 	students_state.invite.sending = false;
+					// }, 500);
+				} else {
+					students_state.invite.status.error =
+						data.error || 'Failed to send invite. Please try again.';
+					students_state.invite.sending = false;
+				}
+			} catch (error) {
+				console.error('Error inviting member:', error);
+				students_state.invite.status.error = 'Failed to send invite. Please try again.';
+			} finally {
+        students_state.invite.sending = false;
+        console.log('Invite process completed. Sending state reset to false.');
+			}
+
+			}
 		const delete_student = async (member: Member) => {}
 		const toggle_student_admin = async (member: Member) => {}
 		const update_student_metadata = async (member: Member, new_metadata: any) => {}
-	</script>
+
+	const email_valid = (email: string) => {
+    const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email_regex.test(email);
+  }
+	const invite_disabled = () => {
+	return (
+      students_state.invite.sending ||
+      !students_state.invite.email ||
+      email_valid(students_state.invite.email) === false ||
+      !students_state.invite.first_name ||
+      !students_state.invite.last_name
+    );
+	}
+</script>
 
 	<div
 		id="ctr-students"
@@ -115,6 +170,7 @@
             class="px-2 py-1 rounded-md cursor-pointer bg-mist-800 text-white hover:bg-mist-700 dark:bg-white dark:text-neutral-800 dark:hover:bg-neutral-200"
             onclick={() => {
               students_state.invite.modal_open = !students_state.invite.modal_open;
+              expanded ? null :
               toggleExpand();
             }}>
             <i class="fa-solid fa-plus"></i>
@@ -137,6 +193,7 @@
             {student}
             selected={false}
             {expanded}
+            invite_open={students_state.invite.modal_open}
             ondelete={() => {}}
             onupdate={() => {}}
             onselect={() => {}}
@@ -153,24 +210,25 @@
           <p class="text-neutral-800 dark:text-neutral-200">Invite new student</p>
           <div class="w-full flex flex-row gap-2">
             <div class="w-full lg:w-1/2">
-              <input type="text" class={`${input_class} w-full`} placeholder="First name" bind:value={students_state.invite.first_name} />
+              <input type="text" required class={`${input_class} w-full`} placeholder="First name" bind:value={students_state.invite.first_name} />
             </div>
             <div class="w-full lg:w-1/2">
-              <input type="text" class={`${input_class} w-full`} placeholder="Last name" bind:value={students_state.invite.last_name} />
+              <input type="text" required class={`${input_class} w-full`} placeholder="Last name" bind:value={students_state.invite.last_name} />
             </div>
 
           </div>
           <div class="w-full">
-            <input type="email" class={`${input_class} w-full`} placeholder="Email" bind:value={students_state.invite.email} />
+            <input type="email" required class={`${input_class} w-full`} placeholder="Email" bind:value={students_state.invite.email} />
           </div>
           <div class="w-full lg:w-4/5 flex flex-col">
             <PhoneInput bind:value={students_state.invite.phone_number} />
           </div>
           <button
-            class="px-4 py-2 rounded-md bg-mist-800 text-white hover:bg-mist-700 dark:bg-white dark:text-neutral-800 dark:hover:bg-neutral-200"
+            class="{ invite_disabled() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' } px-4 py-2 rounded-md bg-mist-800 text-white hover:bg-mist-700 dark:bg-white dark:text-neutral-800 dark:hover:bg-neutral-200"
             onclick={() => {
               invite_new_student();
             }}
+            disabled={invite_disabled()}
           >
             {students_state.invite.cta}
           </button>

@@ -165,7 +165,7 @@
 	const sendInvite = async () => {
 		dashboard_state.invite.sending = true;
 		try {
-			const response = await fetch(`/api/friends/invites/new`, {
+			const response = await fetch(`/api/students/invites/new`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

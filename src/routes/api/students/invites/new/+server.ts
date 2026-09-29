@@ -33,9 +33,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   // Check if user already exists
   const { data: userData, error: userError } = await locals.supabase
-    .from('friends')
+    .from('members')
     .select('id')
-    .eq('email', email)
+    .eq('metadata->>email', email)
     .single();
 
   if (userError && userError.code !== 'PGRST116') { // PGRST116 = No rows found

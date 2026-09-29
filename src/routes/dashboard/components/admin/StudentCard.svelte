@@ -10,11 +10,13 @@
     onselect,
     ondelete,
     onupdate,
-    onaction
+    onaction,
+    invite_open = $bindable()
   } = $props<{
     student: Member,
     selected: boolean,
     expanded: boolean,
+    invite_open: boolean,
     onselect: (student: Member) => void,
     ondelete: (student: Member) => void,
     onupdate: (student: Member) => void,
@@ -30,7 +32,7 @@
 <div class={`w-full flex flex-row px-2 py-4 gap-4 justify-center items-center
   hover:bg-mist-800/10 hover:dark:bg-white/10
  ${selected  ? 'bg-mist-800/10 dark:bg-white/10' : ''}`}>
-  <input type="checkbox" class={`w-4.5 h-4.5 mx-2 ${checkbox_class}`} bind:checked={selected} />
+  <input type="checkbox" class={`w-4.5 h-4.5 mx-2 ${checkbox_class}`} bind:checked={selected} disabled={invite_open} />
   <div class="flex flex-1 flex-row">
     <div class="h-9 w-9 rounded-lg bg-cover bg-center" style={`background-image: url('${ student.metadata.pfp }')`}></div>
     <div class="flex flex-col ml-2">
