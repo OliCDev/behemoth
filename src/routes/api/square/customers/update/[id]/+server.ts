@@ -61,7 +61,7 @@ export const PUT: RequestHandler = async ({ request, params }) => {
 
   let { squareCustomer } = await request.json();
   console.log('Received request to update Square customer:', squareCustomer);
-  let postObj: any = {}
+  let postObj: any = {}, square_req_id
 
 
   // console.log('Updating customer in Square:', squareCustomer.squareCustomer); // It works, I promise
@@ -75,6 +75,7 @@ export const PUT: RequestHandler = async ({ request, params }) => {
     }
 
     member = targetUser?.user;
+    // square_req_id = member?.user_metadata?.square_customer_id ? member?.user_metadata?.square_customer_id : referenceId
     postObj['customerId'] = member?.user_metadata?.square_customer_id;
     postObj['referenceId'] = referenceId;
     postObj['address'] = {

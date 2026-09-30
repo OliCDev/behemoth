@@ -93,19 +93,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 
 
-    // Update user metadata with Square customer ID
-    const { error: updateSquareIdError } = await locals.supabase.auth.updateUser({
-      data: {
-        ...user.user_metadata,
-        member: true,
-        square_customer_id: squareCustomer?.id,
-      },
-    });
+    // // Update user metadata with Square customer ID
+    // const { error: updateSquareIdError } = await locals.supabase.auth.updateUser({
+    //   data: {
+    //     ...user.user_metadata,
+    //     member: true,
+    //     square_customer_id: squareCustomer?.id,
+    //   },
+    // });
 
-    if (updateSquareIdError) {
-      console.error('Error updating user metadata with Square customer ID:', updateSquareIdError);
-      return json({ success: false, error: updateSquareIdError.message }, { status: 500 });
-    }
+    // if (updateSquareIdError) {
+    //   console.error('Error updating user metadata with Square customer ID:', updateSquareIdError);
+    //   return json({ success: false, error: updateSquareIdError.message }, { status: 500 });
+    // }
 
     // Update members table with Square customer ID
     const { error: updateMembersError } = await locals.supabase

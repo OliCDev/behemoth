@@ -83,7 +83,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   };
 
 
-const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${user?.user_metadata?.square_customer_id}`, {
+const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${user?.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

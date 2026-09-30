@@ -184,7 +184,31 @@ const createAddressesStore = () => {
 			error.set(err.message);
 			return { error: err.message };
 		}
-		addresses.update((current) => (current ? current.filter((i) => i.id !== id) : null));
+    addresses.update((current) => (current ? current.filter((i) => i.id !== id) : null));
+
+
+
+    // Update Square:
+    const current = get(addresses);
+    const deletedAddress = current?.find((i) => i.id === id);
+    if (deletedAddress) {
+      const squarePostObj = {
+        address: deletedAddress,
+        referenceId: deletedAddress.user_id,
+      };
+      const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ squareCustomer: squarePostObj }),
+        }).then(res => res.json());
+
+        if (!squareSuccess) {
+          console.error('Error updating Square customer:', squareCustomerError);
+          return { success: true, error: squareCustomerError};
+        }
+    }
 		return {
 			success: true
 		};
@@ -226,8 +250,29 @@ const createAddressesStore = () => {
 			list
 				? list.map((i) => (i.id === id ? data : { ...i, primary: false }))
 				: [data]
-		);
-		return { success: true, address: data };
+    );
+
+		    // Update Square:
+						// Update the Square customer with the new primary address
+	          const squarePostObj = {
+              address: data,
+            referenceId: data.user_id,
+          };
+          const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ squareCustomer: squarePostObj }),
+            }).then(res => res.json());
+
+            if (!squareSuccess) {
+              console.error('Error updating Square customer:', squareCustomerError);
+              return { success: true, error: squareCustomerError};
+            }
+
+
+		return { success: true, address: data, squareCustomer };
 	};
 
 	// ─── Cleanup ───────────────────────────────────────────────────────────────

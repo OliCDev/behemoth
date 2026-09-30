@@ -16,6 +16,9 @@
 	import { containerClasses, button_1, button_cancel } from '$lib/utils/style';
 	import { page } from '$app/stores';
 
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+	const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5174';
+
 	// Components
 	// import AddressForm from './components/AddressForm.svelte';
 	import GeneralTab from './components/tabs/GeneralTab.svelte';
@@ -369,8 +372,35 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
       handle_toast('Error updating member status', "error");
     }
   }
-</script>
 
+  const add_to_square = async () => {
+    const squarePostObj = {
+      givenName: user?.user_metadata?.first_name,
+      familyName: user?.user_metadata?.last_name,
+      emailAddress: user?.user_metadata?.email,
+      referenceId: user?.id,
+      note: 'New member created from Behemoth app',
+    }
+
+    const result = await fetch(`${baseUrl}/api/square/customers/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ newUser: squarePostObj }),
+    })
+
+    if (result.ok) {
+      const data = await result.json();
+      console.log('Square customer created successfully:', data);
+      handle_toast('User added to Square successfully!', "success");
+    } else {
+      console.error('Error adding user to Square:', result.statusText);
+      handle_toast('Error adding user to Square', "error");
+    }
+
+  }
+</script>
 <div class={containerClasses}>
   <ToastContainer position="top-right">
     {#each toasts as toast (toast.id)}
@@ -424,8 +454,10 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
       <div class="flex flex-col p-4 justify-center items-start ">
         <h3 class="text-neutral-800 dark:text-neutral-200">{ user?.user_metadata?.first_name } { user?.user_metadata?.last_name }</h3>
         <h4 class="text-mist-700 dark:text-mist-400">{user?.user_metadata?.email }</h4>
+        <!-- Debug. Don't uncomment in prod, bitch -->
         <!-- <button onclick={toggle_admin} class={`${button_1}`}>toggle admin</button> -->
         <!-- <button onclick={toggle_member} class={`${button_1}`}>toggle member</button> -->
+        <button onclick={add_to_square} class={`${button_1}`}>add to square</button>
       </div>
     </div>
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">
