@@ -17,6 +17,15 @@ const client = new SquareClient({
   environment
 });
 
+// The Square SDK returns some numeric fields (e.g. `version`) as BigInt, which
+// JSON.stringify (used by SvelteKit's json helper) cannot serialize. Convert
+// any BigInt values to strings so the response can be serialized safely.
+function toJsonSafe<T>(value: T): T {
+  return JSON.parse(
+    JSON.stringify(value, (_key, val) => (typeof val === 'bigint' ? val.toString() : val))
+  );
+}
+
 export const POST: RequestHandler = async ({ request }) => {
 
   const { newUser } = await request.json();
@@ -30,7 +39,7 @@ export const POST: RequestHandler = async ({ request }) => {
       return json({ success: false, error: errors[0].detail ?? 'Square error' }, { status: 502 });
     }
 
-    return json({ success: true, customer });
+    return json({ success: true, customer: toJsonSafe(customer) });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     console.error('Error creating Square customer:', err);
