@@ -3,6 +3,10 @@ import type { SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
 import { getRealtimeChannel, supabase as globalSupabase } from '$lib/supabaseClient';
 import type { MemberAddress } from '$lib/types/member';
 
+// Updating Square:
+import { PUBLIC_BASE_URL } from '$env/static/public';
+const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5174';
+
 const createAddressesStore = () => {
 	// ─── Core State ────────────────────────────────────────────────────────────
 	const addresses = writable<MemberAddress[] | null>(null);
@@ -110,8 +114,29 @@ const createAddressesStore = () => {
 			error.set(err.message);
 			return { success: false, error: err.message };
 		}
-		addresses.update((current) => (current ? [...current, data] : [data]));
-		return { success: true, address: data };
+    addresses.update((current) => (current ? [...current, data] : [data]));
+
+    // Update Square:
+    const squarePostObj = {
+      address: item,
+      referenceId: item.user_id,
+    };
+
+
+  const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ squareCustomer: squarePostObj }),
+    }).then(res => res.json());
+
+    if (!squareSuccess) {
+      console.error('Error updating Square customer:', squareCustomerError);
+      return { success: true, error: squareCustomerError};
+    }
+
+		return { success: true, address: data, squareCustomer };
 	};
 
 	const updateAddress = async (id: string, updates: Partial<MemberAddress>) => {

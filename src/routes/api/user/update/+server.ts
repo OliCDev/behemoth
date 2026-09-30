@@ -92,7 +92,7 @@ const { success: squareSuccess, customer: squareCustomer, error: squareCustomerE
   }).then(res => res.json());
 
   if (!squareSuccess) {
-    console.error('Error creating Square customer:', squareCustomerError);
+    console.error('Error updating Square customer:', squareCustomerError);
     return json({ success: false, error: squareCustomerError }, { status: 500 });
   }
 
