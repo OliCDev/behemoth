@@ -425,7 +425,7 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
         <h3 class="text-neutral-800 dark:text-neutral-200">{ user?.user_metadata?.first_name } { user?.user_metadata?.last_name }</h3>
         <h4 class="text-mist-700 dark:text-mist-400">{user?.user_metadata?.email }</h4>
         <!-- <button onclick={toggle_admin} class={`${button_1}`}>toggle admin</button> -->
-        <button onclick={toggle_member} class={`${button_1}`}>toggle member</button>
+        <!-- <button onclick={toggle_member} class={`${button_1}`}>toggle member</button> -->
       </div>
     </div>
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">
