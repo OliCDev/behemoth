@@ -1,9 +1,6 @@
 <script lang="ts">
-
   // Props
-  let {
-    value = $bindable()
-  } = $props<{ value: string }>();
+  let { value = $bindable('') } = $props<{ value: string }>();
 
   // Utils
   import { TelInput, countries } from 'svelte-tel-input';
@@ -16,8 +13,13 @@
     valid: true,
     selecting: false
   });
+  let user_phone = $state('');
 
+  $effect(() => {
+    value = `${user_phone}`;
+  });
 </script>
+
 
 
 
@@ -32,7 +34,12 @@
       </select>
     </div>
     <div class="flex flex-1">
-      <TelInput bind:country={phone_state.country} class={`${input_class}`} bind:value={value} bind:valid={phone_state.valid} />
+      <TelInput
+        bind:country={phone_state.country}
+        class={input_class}
+        bind:value={user_phone}
+        bind:valid={phone_state.valid}
+      />
     </div>
   </div>
   <div class="flex flex-col w-full">
