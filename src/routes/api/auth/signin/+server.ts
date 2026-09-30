@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { PUBLIC_BASE_URL } from '$env/static/public';
-const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5173';
+const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5174';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { email, password } = await request.json();
