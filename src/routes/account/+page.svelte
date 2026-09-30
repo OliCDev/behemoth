@@ -457,7 +457,7 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
         <!-- Debug. Don't uncomment in prod, bitch -->
         <!-- <button onclick={toggle_admin} class={`${button_1}`}>toggle admin</button> -->
         <!-- <button onclick={toggle_member} class={`${button_1}`}>toggle member</button> -->
-        <button onclick={add_to_square} class={`${button_1}`}>add to square</button>
+        <!-- <button onclick={add_to_square} class={`${button_1}`}>add to square</button> -->
       </div>
     </div>
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">
