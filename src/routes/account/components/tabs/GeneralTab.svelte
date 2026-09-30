@@ -171,9 +171,8 @@
 
   // functions
   // -- UI
-  const input_class = "w-full rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
-  const account_card_class = "w-full flex flex-col justify-start items-start p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-300 bg-fixed lg:from-30% lg:to-70% dark:from-mist-900 dark:to-mist-600"
-  const account_new_item_class = "w-full shadow-xl border border-dashed border-neutral-100/20 rounded-md flex flex-col justify-end items-end"
+  import { input_class, account_card_class, account_new_item_class } from '$lib/utils/style';
+
   const modal_base_class = "rounded-lg bg-white shadow-xl dark:bg-mist-900"
   const modal_body_class = "space-y-0 p-6"
   // -- Profile Picture Upload

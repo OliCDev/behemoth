@@ -3,6 +3,8 @@
   // types
   import type { User } from "@supabase/supabase-js";
   // imports
+  // -- UI
+  import { input_class, account_card_class, account_new_item_class } from '$lib/utils/style';
   // props
   let {
     user = $bindable(),
