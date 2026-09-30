@@ -1,6 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 
+import { PUBLIC_BASE_URL } from '$env/static/public';
+const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5173';
+
 export const POST: RequestHandler = async ({ request, locals }) => {
   const { email, password } = await request.json();
 
@@ -18,6 +21,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
   // console.log('/auth/signin - User:', user);
   // //
+  console.log('memberrr', user?.user_metadata.member);
   if (!user.user_metadata.member) {
     const {error: newMemberError } = await locals.supabase
       .from('members')
@@ -33,18 +37,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       return json({ success: false, error: newMemberError.message }, { status: 500 });
     }
 
-    // Update metadata to reflect that the user is now a member
-    const { error: updateMetadataError } = await locals.supabase.auth.updateUser({
-      data: {
-        ...user.user_metadata,
-        member: true,
-      },
-    });
 
-    if (updateMetadataError) {
-      console.error('Error updating user metadata:', updateMetadataError);
-      return json({ success: false, error: updateMetadataError.message }, { status: 500 });
-    }
 
     // create new customer in Square:
 
@@ -67,39 +60,45 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     });
     */
 
-    const { data: squareCustomerData, error: squareCustomerError } = await fetch('/api/square/customers/create', {
+    const squarePostObj = {
+      givenName: user?.user_metadata?.first_name,
+      familyName: user?.user_metadata?.last_name,
+      emailAddress: user?.user_metadata?.email,
+      // address: {
+      //   addressLine1: user?.user_metadata.addresses?.[0]?.line1 || '',
+      //   addressLine2: user?.user_metadata.addresses?.[0]?.line2 || '',
+      //   locality: user?.user_metadata.addresses?.[0]?.city || '',
+      //   administrativeDistrictLevel1:   user?.user_metadata.addresses?.[0]?.state || '',
+      //   postalCode:  user?.user_metadata.addresses?.[0]?.postal_code || '',
+      //   country:  user?.user_metadata.addresses?.[0]?.country || '',
+      // },
+      // phoneNumber: user?.user_metadata.phone_number || '',
+      referenceId: user?.id,
+      note: 'New member created from Behemoth app',
+    }
+
+    console.log('Creating Square customer with data:', squarePostObj);
+    const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        givenName: user?.user_metadata.first_name,
-        familyName: user?.user_metadata.last_name,
-        emailAddress: user?.user_metadata?.email,
-        address: {
-          addressLine1: user?.user_metadata.addresses?.[0]?.line1 || '',
-          addressLine2: user?.user_metadata.addresses?.[0]?.line2 || '',
-          locality: user?.user_metadata.addresses?.[0]?.city || '',
-          administrativeDistrictLevel1:   user?.user_metadata.addresses?.[0]?.state || '',
-          postalCode:  user?.user_metadata.addresses?.[0]?.postal_code || '',
-          country:  user?.user_metadata.addresses?.[0]?.country || '',
-        },
-        phoneNumber: user?.user_metadata.phone_number || '',
-        referenceId: user?.id,
-        note: 'New member created from Behemoth app',
-      }),
+      body: JSON.stringify({ newUser: squarePostObj }),
     }).then(res => res.json());
 
-    if (squareCustomerError) {
+    if (!squareSuccess) {
       console.error('Error creating Square customer:', squareCustomerError);
-      return json({ success: false, error: squareCustomerError.message }, { status: 500 });
+      return json({ success: false, error: squareCustomerError }, { status: 500 });
     }
+
+
 
     // Update user metadata with Square customer ID
     const { error: updateSquareIdError } = await locals.supabase.auth.updateUser({
       data: {
         ...user.user_metadata,
-        square_customer_id: squareCustomerData?.id,
+        member: true,
+        square_customer_id: squareCustomer?.id,
       },
     });
 
@@ -116,7 +115,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
           ...user.user_metadata,
           square:
             {
-              customer_id: squareCustomerData?.id,
+              customer_id: squareCustomer?.id,
             },
           },
       })

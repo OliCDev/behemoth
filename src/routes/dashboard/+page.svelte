@@ -25,7 +25,7 @@
 
 	// Debug:
 	// svelte-ignore state_referenced_locally
-	console.log('Dashboard - User:', user);
+	// console.log('Dashboard - User:', user);
 	// console.log('Dashboard - Members:', members);
 	// console.log('Dashboard - Friends:', friends);
 

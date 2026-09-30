@@ -346,6 +346,29 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
       handle_toast('Error updating admin status', "error");
     }
 	}
+	const toggle_member = async () => {
+
+    const new_member_status = !user.user_metadata.member;
+    const result = await fetch(`/api/auth/toggle-member/${user.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        member: new_member_status
+      })
+    });
+
+    if (result.ok) {
+      member.update((m) =>
+        m ? { ...m, user_metadata: { ...m.user_metadata, member: new_member_status } } : m
+      );
+      handle_toast(`Member status updated to ${new_member_status}`, "success");
+    } else {
+      console.error('Error updating member status: ', result.statusText);
+      handle_toast('Error updating member status', "error");
+    }
+  }
 </script>
 
 <div class={containerClasses}>
@@ -402,6 +425,7 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
         <h3 class="text-neutral-800 dark:text-neutral-200">{ user?.user_metadata?.first_name } { user?.user_metadata?.last_name }</h3>
         <h4 class="text-mist-700 dark:text-mist-400">{user?.user_metadata?.email }</h4>
         <!-- <button onclick={toggle_admin} class={`${button_1}`}>toggle admin</button> -->
+        <button onclick={toggle_member} class={`${button_1}`}>toggle member</button>
       </div>
     </div>
     <div class="flex flex-row w-full border-t-mist-300  dark:border-t-mist-600 border-t overflow-hidden">

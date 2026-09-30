@@ -12,6 +12,7 @@
 	const dark_mode = browser && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 	import app_logo from '$lib/assets/img/app_logo.png';
 	import app_logo_dark from '$lib/assets/img/app_logo_dark.png';
+	import { input_class } from '$lib/utils/style';
 	import { Swords } from 'lucide-svelte'
 
 	// Svelte
@@ -50,7 +51,8 @@
 	// State
 	const login_state = $state({
 		user_creds: {
-			name: '',
+			first_name: '',
+			last_name: '',
 			username: '',
 			password: '',
 			confirm_password: '',
@@ -79,7 +81,8 @@
 			return;
 		}
 		if (
-			!login_state.user_creds.name ||
+			!login_state.user_creds.first_name ||
+			!login_state.user_creds.last_name ||
 			!login_state.user_creds.password ||
 			!login_state.user_creds.confirm_password ||
 			!login_state.user_creds.email
@@ -253,16 +256,28 @@
 
 		{#if login_state.signup_mode}
 			<div class="flex flex-col">
-				<input
-					name="name"
-					bind:value={login_state.user_creds.name}
-					onkeydown={(e) => {
-						login_state.error = '';
-					}}
-					type="text"
-					placeholder={`Your name (e.g. ${randomNameGenerator()})`}
-					class="mb-2 rounded-md border border-mist-300 p-2 focus:border-mist-500 focus:outline-none dark:border-mist-600 dark:bg-mist-800 dark:text-mist-200 dark:focus:border-mist-400"
-				/>
+				<div class="flex flex-row gap-2 mb-2">
+  				<input
+  					name="first_name"
+  					bind:value={login_state.user_creds.first_name}
+  					onkeydown={(e) => {
+  						login_state.error = '';
+  					}}
+  					type="text"
+  					placeholder="First Name"
+  					class="{input_class}"
+  				/>
+          <input
+  					name="last_name"
+  					bind:value={login_state.user_creds.last_name}
+  					onkeydown={(e) => {
+  						login_state.error = '';
+  					}}
+  					type="text"
+  					placeholder="Last Name"
+  					class="{input_class}"
+  				/>
+				</div>
 				<input
 					name="email"
 					bind:value={login_state.user_creds.email}

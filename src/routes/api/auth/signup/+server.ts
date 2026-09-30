@@ -3,10 +3,21 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-  const { email, password, username } = await request.json(),
+  const { first_name, last_name, email, password, username } = await request.json(),
    default_pfp = 'https://uqseuzmnwuthgorjvrdi.supabase.co/storage/v1/object/sign/img/Users/pfp_default.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYTdiMWM0Zi0wNTYzLTRmZTQtYTA0Yy0wMmZiZWViYzYwOWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWcvVXNlcnMvcGZwX2RlZmF1bHQuYXZpZiIsImlhdCI6MTc2MzYxMTY0MywiZXhwIjoxNzk1MTQ3NjQzfQ.7f3p36JtVhzE3-5xeo5A9JlIizORlYAQxup3_R9Hayk';
 
-
+/*
+user_creds: {
+			first_name: '',
+			last_name: '',
+			username: '',
+			password: '',
+			confirm_password: '',
+			email: '',
+			pfp_url:
+				'https://res.cloudinary.com/dxsjva9e0/image/upload/v1761835316/user_avatar_ry4fdr.png'
+		},
+*/
 
   // Sign up user using the supabase client from locals (which manages cookies)
   const { data, error } = await locals.supabase.auth.signUp({
@@ -17,8 +28,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
         username,
         email,
         pfp: default_pfp,
-        first_name: '',
-        last_name: '',
+        first_name,
+        last_name,
         phone_number: '',
         pronouns: '',
         admin: false,
