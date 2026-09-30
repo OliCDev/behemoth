@@ -121,20 +121,18 @@ const createAddressesStore = () => {
       address: item,
       referenceId: item.user_id,
     };
+    const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ squareCustomer: squarePostObj }),
+      }).then(res => res.json());
 
-
-  const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ squareCustomer: squarePostObj }),
-    }).then(res => res.json());
-
-    if (!squareSuccess) {
-      console.error('Error updating Square customer:', squareCustomerError);
-      return { success: true, error: squareCustomerError};
-    }
+      if (!squareSuccess) {
+        console.error('Error updating Square customer:', squareCustomerError);
+        return { success: true, error: squareCustomerError};
+      }
 
 		return { success: true, address: data, squareCustomer };
 	};
@@ -153,8 +151,28 @@ const createAddressesStore = () => {
 			error.set(err.message);
 			return { success: false, error: err.message };
 		}
-		addresses.update((current) => (current ? current.map((i) => (i.id === id ? data : i)) : [data]));
-		return { success: true, address: data };
+    addresses.update((current) => (current ? current.map((i) => (i.id === id ? data : i)) : [data]));
+
+
+
+    // Update Square:
+    const squarePostObj = {
+      address: data,
+      referenceId: data.user_id,
+    };
+    const { success: squareSuccess, customer: squareCustomer, error: squareCustomerError } = await fetch(`${baseUrl}/api/square/customers/update/${squarePostObj.referenceId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ squareCustomer: squarePostObj }),
+      }).then(res => res.json());
+
+      if (!squareSuccess) {
+        console.error('Error updating Square customer:', squareCustomerError);
+        return { success: true, error: squareCustomerError};
+      }
+		return { success: true, address: data, squareCustomer  };
 	};
 
 	const deleteAddress = async (id: string) => {
