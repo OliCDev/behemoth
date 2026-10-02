@@ -37,7 +37,7 @@
 
 
   // Debug
-  console.log('PaymentMethodsTab - user:', user);
+  // console.log('PaymentMethodsTab - user:', user);
 
   // Stores:
   import {
@@ -179,12 +179,12 @@ const state = $state({
 	  // $effect can't be async, so run the Square setup in an async IIFE
 	  (async () => {
 			console.log("Square.js loading...");
-      // Square
+
         if (!window.Square) {
           console.error("Square.js failed to load properly");
           return;
         } else {
-        // console.log("Square.js loaded", window.Square);
+        console.log("Square.js loaded");
 
          payments = window?.Square?.payments(squareApplicationId, squareLocationId);
         square_loaded = payments;
@@ -308,11 +308,6 @@ const state = $state({
                     body,
                   });
                   console.log("createCardResponse", newCard);
-
-                // auth.user.payment_methods.push(JSON.parse(newCard?.body?.card));
-                // if (!auth.user.selected_payment_method) {
-                //   auth.user.selected_payment_method = JSON.parse(newCard?.body?.card)
-                // }
                   tick();
                   state.success = "Payment method added successfully!";
                 // const paymentResults = await createPayment(token);

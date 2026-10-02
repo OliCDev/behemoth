@@ -2,6 +2,9 @@ import type { Session, SupabaseClient, User } from '@supabase/supabase-js'
 import type { Database } from './database.types.ts' // import generated types
 
 declare global {
+  interface Window {
+      Square: any;
+    }
 	namespace App {
 		// interface Error {}
 		interface Locals {
