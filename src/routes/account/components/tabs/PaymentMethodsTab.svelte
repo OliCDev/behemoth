@@ -231,19 +231,19 @@ const state = $state({
                 }
             },
             tokenize = async (paymentMethod: any) => {
-            const tokenResult = await paymentMethod.tokenize();
-            if (tokenResult.status === "OK") {
-              return tokenResult.token;
-            } else {
-              let errorMessage = `Tokenization failed-status: ${tokenResult.status}`;
-              if (tokenResult.errors) {
-                errorMessage += ` and errors: ${JSON.stringify(
-                  tokenResult.errors
-                )}`;
+              const tokenResult = await paymentMethod.tokenize();
+              if (tokenResult.status === "OK") {
+                return tokenResult.token;
+              } else {
+                let errorMessage = `Tokenization failed-status: ${tokenResult.status}`;
+                if (tokenResult.errors) {
+                  errorMessage += ` and errors: ${JSON.stringify(
+                    tokenResult.errors
+                  )}`;
+                }
+                throw new Error(errorMessage);
               }
-              throw new Error(errorMessage);
-            }
-          },
+            },
             displayPaymentResults = (status: any) => {
             const statusContainer = document.getElementById(
               "payment-status-container"
@@ -292,9 +292,12 @@ const state = $state({
                   const body = JSON.stringify({
                     idempotencyKey: uuidv4(),
                     sourceId: token,
+                    customerId: user?.user_metadata?.square_customer_id,
+                    memberId: user?.id,
                     card: {
                       cardholderName: `${user?.user_metadata?.first_name} ${user?.user_metadata?.last_name}`,
                       customerId: user?.user_metadata?.square_customer_id,
+                      referenceId: user?.id,
                     },
                   });
 
@@ -310,7 +313,7 @@ const state = $state({
                   console.log("createCardResponse", newCard);
                   tick();
                   state.success = "Payment method added successfully!";
-                // const paymentResults = await createPayment(token);
+                const paymentResults = await createPayment(token);
                 // displayPaymentResults("SUCCESS");
 
                 // console.debug("Payment Success", paymentResults);
