@@ -47,6 +47,7 @@
 		"square": "^46.0.0",
 		"svelte-file-dropzone": "^2.0.9",
 		"svelte-tel-input": "^4.3.3",
+		"uuid": "^14.0.2",
 		"xlsx": "^0.18.5"
 	}
 }

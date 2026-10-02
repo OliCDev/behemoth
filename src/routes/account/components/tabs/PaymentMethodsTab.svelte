@@ -19,11 +19,13 @@
   } from '$lib/utils/style';
   import { Tooltip, Modal } from 'flowbite-svelte';
   // -- Svelte
-  import { tick } from 'svelte';
+  import { tick, onMount, onDestroy } from 'svelte';
+  import { browser } from '$app/environment';
   // -- Square
   import { PUBLIC_SQUARE_APPLICATION_ID, PUBLIC_SQUARE_LOCATION_ID } from '$env/static/public';
   const squareApplicationId = PUBLIC_SQUARE_APPLICATION_ID, squareLocationId = PUBLIC_SQUARE_LOCATION_ID;
   let square_loaded = false;
+  import { v4 as uuidv4 } from 'uuid'
 
   // props
   let {
@@ -32,6 +34,10 @@
     onsuccess = () => {},
     onerror = () => {}
   } = $props<{ user: User, supabase: any, onsuccess: () => void, onerror: () => void }>();
+
+
+  // Debug
+  console.log('PaymentMethodsTab - user:', user);
 
   // Stores:
   import {
@@ -154,6 +160,217 @@ const state = $state({
 			flash(res?.error || 'Error setting primary PaymentMethod.', false);
 		}
 	};
+
+	// Square
+	let payments: any, card: any;
+	const initializeCard = async (payments: any) => {
+    const card = await payments.card();
+    await card.attach("#card-container");
+    return card;
+  }
+
+	$effect(() => {
+	  if (!(state.create.paymentMethod.open && browser && squareApplicationId && squareLocationId)) return;
+
+	  let cancelled = false;
+	  let cardButton: HTMLButtonElement | null = null;
+	  let onCardButtonClick: ((event: any) => Promise<void>) | null = null;
+
+	  // $effect can't be async, so run the Square setup in an async IIFE
+	  (async () => {
+			console.log("Square.js loading...");
+      // Square
+        if (!window.Square) {
+          console.error("Square.js failed to load properly");
+          return;
+        } else {
+        // console.log("Square.js loaded", window.Square);
+
+         payments = window?.Square?.payments(squareApplicationId, squareLocationId);
+        square_loaded = payments;
+        // let card :any;
+        try {
+          // wait for the modal content (#card-container) to be rendered
+          await tick();
+          const newCard = await initializeCard(payments);
+          if (cancelled) {
+            newCard.destroy();
+            return;
+          }
+          card = newCard;
+          // console.log("card", card);
+          // Credit Cards:
+          const createPayment = async (token: any) => {
+            const body = JSON.stringify({
+              locationId: squareLocationId,
+              sourceId: token,
+              customerId: user?.user_metadta?.square_customer_id,
+              idempotencyKey: uuidv4(),
+              amountMoney: {
+                amount: 1,
+                currency: "USD",
+              },
+              appFeeMoney: {
+                amount: 0,
+                currency: "USD",
+              },
+            }),
+            paymentResponse = await fetch("/api/square/payment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body,
+              });
+              console.log("paymentResponse", paymentResponse);
+              if (paymentResponse.status == "COMPLETED") {
+                return paymentResponse;
+                } else {
+              // const errorBody = await paymentResponse.text();
+              // throw new Error(errorBody);
+                }
+            },
+            tokenize = async (paymentMethod: any) => {
+            const tokenResult = await paymentMethod.tokenize();
+            if (tokenResult.status === "OK") {
+              return tokenResult.token;
+            } else {
+              let errorMessage = `Tokenization failed-status: ${tokenResult.status}`;
+              if (tokenResult.errors) {
+                errorMessage += ` and errors: ${JSON.stringify(
+                  tokenResult.errors
+                )}`;
+              }
+              throw new Error(errorMessage);
+            }
+          },
+            displayPaymentResults = (status: any) => {
+            const statusContainer = document.getElementById(
+              "payment-status-container"
+            );
+            if (status === "SUCCESS") {
+              statusContainer?.classList.remove("is-failure");
+              statusContainer?.classList.add("is-success");
+            } else {
+              statusContainer?.classList.remove("is-success");
+              statusContainer?.classList.add("is-failure");
+            }
+
+            if(statusContainer)
+            statusContainer.style.visibility = "visible";
+          },
+            handlePaymentMethodSubmission = async (event: any, paymentMethod: any) => {
+              event.preventDefault();
+              const cardButton = document.getElementById("card-button") as HTMLButtonElement | null;
+
+              try {
+                // disable the submit button as we await tokenization and make a
+                // payment request.
+                if (!paymentMethod) {
+                  throw new Error("Payment method is not initialized");
+                }
+
+                if(!cardButton) {
+                  throw new Error("Card button is not initialized");
+                }
+                cardButton.disabled = true;
+                const token = await tokenize(paymentMethod);
+
+                /*
+                  Use card to get the token, then use token to add card to user's payment methods
+                */
+
+                // const address = {
+                //   addressLin1: auth?.user?.addresses?.street,
+                //   addressLin2: auth?.user?.addresses?.street2 ?? "",
+                //   locality: auth?.user?.addresses?.town_city,
+                //   administrativeDistrictLevel1: auth?.user?.addresses?.state,
+                //   postalCode: auth?.user?.addresses?.postal_zip_code,
+                //   country: auth?.user?.addresses?.country,
+                // };
+
+                  const body = JSON.stringify({
+                    idempotencyKey: uuidv4(),
+                    sourceId: token,
+                    card: {
+                      cardholderName: `${user?.user_metadata?.first_name} ${user?.user_metadata?.last_name}`,
+                      customerId: user?.user_metadata?.square_customer_id,
+                    },
+                  });
+
+                // billingAddress: address,
+
+                const newCard = await fetch("/api/square/customers/cards/create", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body,
+                  });
+                  console.log("createCardResponse", newCard);
+
+                // auth.user.payment_methods.push(JSON.parse(newCard?.body?.card));
+                // if (!auth.user.selected_payment_method) {
+                //   auth.user.selected_payment_method = JSON.parse(newCard?.body?.card)
+                // }
+                  tick();
+                  state.success = "Payment method added successfully!";
+                // const paymentResults = await createPayment(token);
+                // displayPaymentResults("SUCCESS");
+
+                // console.debug("Payment Success", paymentResults);
+                  } catch (Event: any) {
+                    if(!cardButton) {
+                      throw new Error("Card button is not initialized");
+                    }
+                    cardButton.disabled = false;
+                    displayPaymentResults("FAILURE");
+                    console.error(Event.message);
+                  }
+              };
+
+            cardButton = document.getElementById("card-button") as HTMLButtonElement | null;
+            onCardButtonClick = (event: any) => handlePaymentMethodSubmission(event, card);
+            cardButton?.addEventListener("click", onCardButtonClick);
+
+          } catch (e) {
+        console.error("Initializing Card failed", e);
+        return;
+      }
+        }
+	  })();
+
+	  // runs when the modal closes / component unmounts
+	  return () => {
+	    cancelled = true;
+	    if (cardButton && onCardButtonClick) {
+	      cardButton.removeEventListener("click", onCardButtonClick);
+	    }
+	    card?.destroy?.();
+	    card = undefined;
+	  };
+  });
+
+
+//
+//   const handle_create_payment_method_square = async () => {
+//     if (!card) return;
+//     const result = await card.tokenize();
+//     if (result.status === 'OK') {
+//       const token = result.token;
+//       // Send the token to your server to create a payment method
+//       const res = await createPaymentMethod({ user_id: $member?.id || '', token });
+//       if (res?.success) {
+//         state.create.paymentMethod.open = false;
+//         reset_create_payment_method();
+//         flash('PaymentMethod added successfully!');
+//       } else {
+//         flash(res?.error || 'Error adding PaymentMethod.', false);
+//       }
+//     } else {
+//       flash('Error tokenizing card. Please check your card details.', false);
+//     }
+// 	}
 </script>
 <div id="tab-payment" class="{account_tab}">
 
@@ -205,7 +422,7 @@ const state = $state({
                 </button>
                 <Modal
                   bind:open={state.edit.paymentMethod.open}
-                  size="lg"
+                  size="md"
                   class={modal_base_class}
                   classes={{ body: modal_body_class}}
                   >
@@ -311,7 +528,7 @@ const state = $state({
           <Tooltip triggeredBy="#btn-add_new_payment_method">Add a new payment method</Tooltip>
           <Modal
             bind:open={state.create.paymentMethod.open}
-            size="lg"
+
             class={modal_base_class}
             classes={{ body: modal_body_class}}
           >
@@ -320,7 +537,28 @@ const state = $state({
                 Add New Payment Method
               </h3>
               <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
-
+              <div class="mx-auto p-4 flex flex-col justify-center items-start">
+                <form id="payment-form">
+                  <div id="card-container"></div>
+                  <!-- <button
+                    id="card-button"
+                    type="button"
+                    class="w-full rounded-md py-2 px-4 btn-amber text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 mt-4"
+                  >
+                    Add card
+                </button> -->
+                </form>
+                <div id="payment-status-container"></div>
+                {#if state.success}
+                  <p class="text-green-500 mt-2 text-sm">
+                    { state.success }
+                  </p>
+                  {:else if state.error}
+                  <p class="text-red-500 mt-2 text-sm">
+                    { state.error }
+                  </p>
+                {/if}
+              </div>
               <div class="w-full flex flex-row gap-4 justify-end items-end mt-4">
                 <button
                   class={`${button_cancel} cursor-pointer`}
@@ -331,6 +569,7 @@ const state = $state({
                   Cancel
                 </button>
                 <button
+                  id="card-button"
                   class={`${button_1} cursor-pointer`}
                   onclick={handle_create_payment_method}
                 >
@@ -344,3 +583,18 @@ const state = $state({
     </div>
   </div>
 </div>
+
+<style>
+
+:global(.sq-card-message-no-error),
+:global(.sq-card-message) {
+  color: white !important;
+}
+.sq-card-wrapper .sq-card-message-no-error {
+  color: white !important;
+}
+.sq-card-wrapper .sq-card-message-no-error::before {
+  background-color: white !important;
+}
+
+</style>
