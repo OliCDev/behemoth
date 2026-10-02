@@ -4,7 +4,7 @@
   import type { User } from "@supabase/supabase-js";
   // imports
   import { Label, Alert } from 'flowbite-svelte';
-  import { button_1, button_cancel, input_class } from '$lib/utils/style';
+  import { button_1, account_tab, button_cancel, input_class } from '$lib/utils/style';
   // props
   let {
     user = $bindable(),
@@ -64,7 +64,7 @@
     security_state.initial_success = true;
   }
 </script>
-<div id="tab-security" class="flex flex-col gap-4 w-full lg:w-[80%] mt-10 mb-20">
+<div id="tab-security" class="{account_tab}">
 
   <!-- Password Update -->
   <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">

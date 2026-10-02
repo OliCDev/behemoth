@@ -171,7 +171,7 @@
 
   // functions
   // -- UI
-  import { input_class, account_card_class, account_new_item_class } from '$lib/utils/style';
+  import { input_class, account_card_class, account_tab, account_new_item_class } from '$lib/utils/style';
 
   const modal_base_class = "rounded-lg bg-white shadow-xl dark:bg-mist-900"
   const modal_body_class = "space-y-0 p-6"
@@ -320,7 +320,7 @@
 </script>
 
 
-<div id="tab-general" class="flex flex-col gap-4 w-full lg:w-[80%] mt-10 mb-20">
+<div id="tab-general" class="{account_tab}">
 
 
   <!-- Personal -->
@@ -400,7 +400,7 @@
               <div class="w-full flex flex-row gap-2">
                 <div class="flex flex-1"></div>
                 <!-- Primary -->
-                {#if  address.primary}
+                {#if address.primary}
                   <Tooltip triggeredBy={`#primary-${index}`}>Primary address</Tooltip>
                   <button
                     aria-label="Primary address"

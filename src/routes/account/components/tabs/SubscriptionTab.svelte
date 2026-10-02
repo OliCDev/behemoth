@@ -3,6 +3,8 @@
   // types
   import type { User } from "@supabase/supabase-js";
   // imports
+  // -- UI
+  import { input_class, account_card_class, account_tab, account_new_item_class } from '$lib/utils/style';
   // props
   let {
     user = $bindable(),
@@ -14,7 +16,7 @@
   // lifecycle
   // functions
 </script>
-<div id="tab-payment" class="flex flex-col gap-4 w-full lg:w-[80%] mt-10 mb-20">
+<div id="tab-payment" class={`${account_tab}`}>
 
   <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">
     <div class="w-full lg:w-1/4 flex flex-col justify-start items-start p-2">

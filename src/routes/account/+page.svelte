@@ -26,17 +26,15 @@
 	import PaymentMethodsTab from './components/tabs/PaymentMethodsTab.svelte';
 
 	// Data
-	const supabase = $derived($page.data.supabase), user = $derived($page.data.user);
+	const supabase = $derived($page.data.supabase), user = $derived($page.data.user), payment_methods = $derived($page.data.paymentMethods);
 	import { countries } from '$lib/assets/data/countries';
 	import { states } from '$lib/assets/data/states';
+
 	// Debug:
 	// svelte-ignore state_referenced_locally
 	// console.log('Account page - User:', user);
 	// console.log('Account page - Supabase client:', supabase);
-
-  // type
-
-	// debug
+	// console.log('Account page - payment methods:', payment_methods)
 	// console.log('Account page - member:', $member);
 	// console.log('Account page - member.addresses:', $member?.addresses);
 
@@ -54,12 +52,21 @@
     deleteAddress,
     setPrimaryAddress
   } from '$lib/stores/addresses.svelte';
-import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
+  import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
   import {
     member,
     initMemberStore
   } from '$lib/stores/member.svelte';
-
+  // PaymentMethods store
+  import {
+    paymentMethodsStore,
+    paymentMethods as userPaymentMethods,
+    createPaymentMethod,
+    updatePaymentMethod,
+    deletePaymentMethod,
+    setPrimaryPaymentMethod,
+    initPaymentMethodsStore
+  } from '$lib/stores/payment_methods.svelte';
   // state
   const dark_mode = $state(browser && window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches);
   const default_pfp =
@@ -152,6 +159,7 @@ import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
     // layout; awaiting it here guarantees `$member` is populated for this user
     // (refreshing its data) without duplicating the realtime channel.
     await initMemberStore(user, supabase);
+    await initPaymentMethodsStore(payment_methods, user, supabase);
   })
 
   $effect(() => {
