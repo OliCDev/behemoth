@@ -18,6 +18,7 @@ export type MemberAddress = {
 export type MemberPaymentMethod = {
   id?: string | null;
   user_id: string;
+  name: string;
   card_brand: string;
   card_last4: string;
   card_exp_month: number;

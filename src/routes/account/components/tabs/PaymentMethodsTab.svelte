@@ -78,6 +78,10 @@ const state = $state({
     }
   });
   let visiblePaymentMethods = $derived($userPaymentMethods ?? []);
+  // Debug
+  console.log('PaymentMethodsTab - visiblePaymentMethods:', visiblePaymentMethods);
+
+
   // lifecycle
   // functions
   // -- PaymentMethod CRUD
@@ -381,7 +385,7 @@ const state = $state({
         {#if visiblePaymentMethods.length > 0}
           {#each visiblePaymentMethods as paymentMethod, index}
             <div class={account_card_class}>
-              <div class="w-full flex flex-row gap-2">
+              <div class="ctr-payment_method_actions w-full flex flex-row gap-2">
                 <div class="flex flex-1"></div>
                 <!-- Primary -->
                 {#if paymentMethod.primary}
@@ -500,13 +504,13 @@ const state = $state({
                   </div>
                 </Modal>
               </div>
-              <!-- <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold my-1">{paymentMethod.label}</h4>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line1}</p>
-              {#if address.address_line2?.length}
-                <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line2}</p>
-              {/if}
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.city}, {address.state} {address.postal_code}</p>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.country}</p>  -->
+              <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold my-1">{paymentMethod.name}</h4>
+              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">********* {paymentMethod.card_last4}</p>
+              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">
+                {paymentMethod.card_exp_month} / {paymentMethod.card_exp_year}</p>
+              <div class="w-full flex flex-row justify-end items-end p-2">
+                <i class="fa-brands fa-cc-{paymentMethod.card_brand.toLowerCase()} text-neutral-600 dark:text-neutral-400 text-3xl"></i>
+              </div>
             </div>
           {/each}
         <!-- {:else}
