@@ -174,6 +174,26 @@ const state = $state({
     return card;
   }
 
+	const card_brand = (brand: string) => {
+
+	      switch (brand.toLowerCase()) {
+      case 'visa':
+        return 'fa-brands fa-cc-visa';
+      case 'mastercard':
+        return 'fa-brands fa-cc-mastercard';
+      case 'american_express':
+        return 'fa-brands fa-cc-amex';
+      case 'discover':
+        return 'fa-brands fa-cc-discover';
+      case 'jcb':
+        return 'fa-brands fa-cc-jcb';
+      case 'discover_diners':
+        return 'fa-brands fa-cc-diners-club';
+      default:
+        return 'fa-solid fa-credit-card'; // default icon for unknown brands
+    }
+	}
+
 	$effect(() => {
 	  if (!(state.create.paymentMethod.open && browser && squareApplicationId && squareLocationId)) return;
 
@@ -507,7 +527,7 @@ const state = $state({
               <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">
                 {paymentMethod.card_exp_month} / {paymentMethod.card_exp_year}</p>
               <div class="w-full flex flex-row justify-end items-end p-2">
-                <i class="fa-brands fa-cc-{paymentMethod.card_brand.toLowerCase()} text-neutral-600 dark:text-neutral-400 text-3xl"></i>
+                <i class="{card_brand(paymentMethod.card_brand.toLowerCase())} text-neutral-600 dark:text-neutral-400 text-3xl"></i>
               </div>
             </div>
           {/each}
