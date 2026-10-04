@@ -88,6 +88,7 @@ const state = $state({
 	const reset_create_payment_method = () => {
 		state.create.paymentMethod.item = {
       user_id: $member?.id || '',
+      name: '',
       card_brand: '',
       card_last4: '',
       card_exp_month: 0,
@@ -205,10 +206,10 @@ const state = $state({
           // console.log("card", card);
           // Credit Cards:
           const createPayment = async (token: any) => {
-            const body = JSON.stringify({
+            const postObj = {
               locationId: squareLocationId,
               sourceId: token,
-              customerId: user?.user_metadta?.square_customer_id,
+              customerId: user?.user_metadata?.square_customer_id,
               idempotencyKey: uuidv4(),
               amountMoney: {
                 amount: 1,
@@ -218,21 +219,24 @@ const state = $state({
                 amount: 0,
                 currency: "USD",
               },
-            }),
-            paymentResponse = await fetch("/api/square/payment", {
+            },
+            paymentResponse = await fetch("/api/square/payments/create", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body,
+              body: JSON.stringify({ paymentData: postObj }),
               });
-              console.log("paymentResponse", paymentResponse);
-              if (paymentResponse.status == "COMPLETED") {
-                return paymentResponse;
-                } else {
-              // const errorBody = await paymentResponse.text();
-              // throw new Error(errorBody);
-                }
+              let outer_space = await paymentResponse.json();
+              console.log("paymentResponse", outer_space);
+             /*  if(paymentResponse.ok) {
+                const paymentResponseJson = await paymentResponse.json();
+                console.log("paymentResponseJson", paymentResponseJson);
+              } else {
+                const errorBody = await paymentResponse.text();
+                console.error("Payment request failed with status:", paymentResponse.status, "and body:", errorBody);
+                throw new Error(errorBody);
+              } */
             },
             tokenize = async (paymentMethod: any) => {
               const tokenResult = await paymentMethod.tokenize();
@@ -293,7 +297,7 @@ const state = $state({
                 //   country: auth?.user?.addresses?.country,
                 // };
 
-                  const body = JSON.stringify({
+                  const postObj = {
                     idempotencyKey: uuidv4(),
                     sourceId: token,
                     customerId: user?.user_metadata?.square_customer_id,
@@ -303,7 +307,7 @@ const state = $state({
                       customerId: user?.user_metadata?.square_customer_id,
                       referenceId: user?.id,
                     },
-                  });
+                  };
 
                 // billingAddress: address,
 
@@ -312,13 +316,25 @@ const state = $state({
                     headers: {
                       "Content-Type": "application/json",
                     },
-                    body,
+                    body: JSON.stringify({ cardData: postObj }),
                   });
-                  console.log("createCardResponse", newCard);
+                  let res = await newCard.json();
+
+                  if(!newCard.ok || !res.success) {
+                    throw new Error(res.error || "Error adding payment method.");
+                  } else {
+                    console.log("createCardResponse", res);
+                  }
                   tick();
                   state.success = "Payment method added successfully!";
-                const paymentResults = await createPayment(token);
+                // const paymentResults = await createPayment(token);
                 // displayPaymentResults("SUCCESS");
+                // close modal:
+                setTimeout(() => {
+                  state.create.paymentMethod.open = false;
+                  onsuccess("green", state.success);
+                  state.success = '';
+                }, 1000);
 
                 // console.debug("Payment Success", paymentResults);
                   } catch (Event: any) {
@@ -353,26 +369,6 @@ const state = $state({
 	  };
   });
 
-
-//
-//   const handle_create_payment_method_square = async () => {
-//     if (!card) return;
-//     const result = await card.tokenize();
-//     if (result.status === 'OK') {
-//       const token = result.token;
-//       // Send the token to your server to create a payment method
-//       const res = await createPaymentMethod({ user_id: $member?.id || '', token });
-//       if (res?.success) {
-//         state.create.paymentMethod.open = false;
-//         reset_create_payment_method();
-//         flash('PaymentMethod added successfully!');
-//       } else {
-//         flash(res?.error || 'Error adding PaymentMethod.', false);
-//       }
-//     } else {
-//       flash('Error tokenizing card. Please check your card details.', false);
-//     }
-// 	}
 </script>
 <div id="tab-payment" class="{account_tab}">
 
@@ -408,7 +404,7 @@ const state = $state({
                 {/if}
 
                 <!-- Edit -->
-                <button
+                <!-- <button
                   aria-label="Edit payment method"
                   class="text-neutral-600 dark:text-neutral-400 hover:text-amber-500 dark:hover:sky-red-400 cursor-pointer"
                   onclose={() => {
@@ -421,7 +417,7 @@ const state = $state({
                   }}
                 >
                   <i class="fi fi-ss-edit text-amber-400 hover:text-amber-500"></i>
-                </button>
+                </button> -->
                 <Modal
                   bind:open={state.edit.paymentMethod.open}
                   size="md"
@@ -457,6 +453,7 @@ const state = $state({
                 </Modal>
                 <!-- Delete -->
                 <button
+                  id={`delete-${index}`}
                   aria-label="Delete address"
                   class="text-neutral-600 dark:text-neutral-400 hover:text-red-500 dark:hover:text-red-400 cursor-pointer"
                   onclose={() => {
@@ -469,6 +466,7 @@ const state = $state({
                   }}>
                     <i class="fi fi-ss-trash  text-red-400 hover:text-red-500"></i>
                 </button>
+                <Tooltip triggeredBy={`#delete-${index}`}>Delete payment method</Tooltip>
                 <Modal
                   bind:open={state.delete.paymentMethod.open}
                   size="md"
@@ -480,7 +478,7 @@ const state = $state({
                       <!-- Delete "{state.delete.paymentMethod.item?.label}" -->
                     </h3>
                     <p class="text-neutral-600 dark:text-neutral-400 m-0">
-                      Are you sure you want to delete the address "{state.delete.paymentMethod.item}"?
+                      Are you sure you want to delete this payment method?"?
                     </p>
                     <small class="text-neutral-600 dark:text-neutral-400 mx-0 mt-0 mb-4">This action cannot be undone.</small>
                     <div class="w-1/2 mx-auto flex flex-row gap-4 justify-center items-center mt-4">
@@ -530,16 +528,16 @@ const state = $state({
           <Tooltip triggeredBy="#btn-add_new_payment_method">Add a new payment method</Tooltip>
           <Modal
             bind:open={state.create.paymentMethod.open}
-
+            size="sm"
             class={modal_base_class}
             classes={{ body: modal_body_class}}
           >
-            <div class="w-full min-h-37 flex flex-col justify-center items-start px-8 pb-8">
+            <div class="w-full flex flex-col justify-center items-start">
               <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
                 Add New Payment Method
               </h3>
-              <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
-              <div class="mx-auto p-4 flex flex-col justify-center items-start">
+              <!-- <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t "> -->
+              <div class="flex flex-col justify-start items-start">
                 <form id="payment-form">
                   <div id="card-container"></div>
                   <!-- <button
@@ -551,17 +549,8 @@ const state = $state({
                 </button> -->
                 </form>
                 <div id="payment-status-container"></div>
-                {#if state.success}
-                  <p class="text-green-500 mt-2 text-sm">
-                    { state.success }
-                  </p>
-                  {:else if state.error}
-                  <p class="text-red-500 mt-2 text-sm">
-                    { state.error }
-                  </p>
-                {/if}
               </div>
-              <div class="w-full flex flex-row gap-4 justify-end items-end mt-4">
+              <div class="w-full flex flex-row gap-4 justify-end">
                 <button
                   class={`${button_cancel} cursor-pointer`}
                   onclick={() => {
