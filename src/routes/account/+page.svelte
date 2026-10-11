@@ -85,7 +85,7 @@
   		tabs: [
   		  { name: 'General', href: '#', current: true },
         { name: 'Security', href: '#', current: false },
-        { name: 'Payment Methods', href: '#', current: false },
+        { name: 'Payment <span class="hidden lg:inline">Methods</span>', href: '#', current: false },
         { name: 'Subscription', href: '#', current: false }
   		],
       edit: {
@@ -467,12 +467,12 @@
           class:font-bold={account_state.current_tab === tab.name}
           onclick={() => (account_state.current_tab = tab.name)}
         >
-          {tab.name}
+          {@html tab.name}
         </button>
       {/each}
     </div>
   </div>
-  <div class="bg-white/60 p-8 shadow-xl dark:bg-white/10 rounded-md">
+  <div class="bg-white/60 p-4 lg:p-8 shadow-xl dark:bg-white/10 rounded-md">
     {#if account_state.current_tab === 'General'}
       <GeneralTab
         {user}
