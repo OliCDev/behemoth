@@ -487,7 +487,7 @@
       onsuccess={() => { handle_toast("User security settings updated successfully!", "success")}}
       onerror={() => { handle_toast("Error updating user security settings!", "error") }}
     />
-    {:else if account_state.current_tab === 'Payment Methods'}
+    {:else if account_state.current_tab === 'Payment <span class="hidden lg:inline">Methods</span>'}
     <PaymentMethodsTab
       {user}
       {supabase}

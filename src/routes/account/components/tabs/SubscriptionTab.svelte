@@ -98,7 +98,7 @@
                   Add new Subscription Plan
                 </h3>
                 <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
-                <SubscriptionForm bind:subscriptionPlan={state.create.subscriptionPlan} editing={true} />
+                <!-- <SubscriptionForm bind:subscriptionPlan={state.create.subscriptionPlan} editing={true} /> -->
                 <div class="flex w-full flex-row gap-4 justify-end items-center mt-4">
                   <button
                     class={`${button_cancel}`}
