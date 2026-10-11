@@ -13,6 +13,7 @@ const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5174';
 const ZERO_DECIMAL_CURRENCIES: SubscriptionPlan['currency'][] = ['JPY'];
 
 const BILLING_CADENCE: Record<SubscriptionPlan['billing_interval'], string> = {
+  week: 'WEEKLY',
 	month: 'MONTHLY',
 	year: 'ANNUAL'
 };

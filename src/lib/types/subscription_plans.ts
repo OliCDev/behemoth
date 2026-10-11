@@ -4,9 +4,9 @@ export type SubscriptionPlan = {
   description: string;
   price: number;
   currency: 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR';
-  billing_interval: 'month' | 'year';
-  start_date?: string;
-  end_date?: string;
+  billing_interval: 'week' |'month' | 'year';
+  start_date?: string | null;
+  end_date?: string | null;
   square_plan_id?: string | null;
   square_plan_variation_id?: string | null;
   created_at?: string;
