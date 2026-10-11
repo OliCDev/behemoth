@@ -37,6 +37,20 @@ function toJsonSafe<T>(value: T): T {
   );
 }
 
+/*
+  The inverse of `toJsonSafe`: the SDK's request serializer rejects plain
+  numbers for BigInt fields (e.g. `amount`, `ordinal`, `version`), but JSON
+  request bodies can only carry numbers/strings. Convert those keys back.
+*/
+const BIGINT_KEYS = new Set(['amount', 'ordinal', 'version', 'monthlyBillingAnchorDate']);
+function fromJsonSafe<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value), (key, val) =>
+    BIGINT_KEYS.has(key) && (typeof val === 'number' || (typeof val === 'string' && /^\d+$/.test(val)))
+      ? BigInt(val)
+      : val
+  );
+}
+
 export const POST: RequestHandler = async ({ request, locals }) => {
 
   const { catalogData } = await request.json();
@@ -97,15 +111,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
     */
 
-    await client.catalog.object.upsert({
+    const response = await client.catalog.object.upsert({
       idempotencyKey: catalogData.idempotencyKey,
-      object: catalogData.object
+      object: fromJsonSafe(catalogData.object)
+    });
+
+    return json({
+      success: true,
+      catalogObject: toJsonSafe(response.catalogObject),
+      idMappings: toJsonSafe(response.idMappings)
     });
   }
   catch (error) {
     console.error('Error upserting catalog in Square:', error);
     return json({ success: false, error: 'Error upserting catalog in Square' }, { status: 500 });
   }
-
-  return json({ success: true, message: 'Catalog upsert endpoint is not yet implemented.' });
 }

@@ -7,6 +7,8 @@ export type SubscriptionPlan = {
   billing_interval: 'month' | 'year';
   start_date?: string;
   end_date?: string;
+  square_plan_id?: string | null;
+  square_plan_variation_id?: string | null;
   created_at?: string;
   updated_at?: string;
 }
