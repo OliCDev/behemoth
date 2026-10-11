@@ -23,6 +23,13 @@
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Subscription</h3>
     </div>
     <div class="w-full lg:w-3/4 flex flex-col">
+      {#if user?.user_metadata?.admin}
+        <!-- Subscription Management  -->
+        <div class=""></div>
+        {:else}
+        <!-- User upgrade/cancel -->
+        <div class=""></div>
+      {/if}
     </div>
   </div>
 </div>

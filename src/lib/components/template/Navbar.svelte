@@ -61,7 +61,7 @@
 	id="navbar-mobile"
 	class="visible fixed bottom-0 z-50 flex w-full flex-row items-center justify-center bg-mist-200 px-6 py-2 lg:invisible dark:bg-mist-800"
 >
-	<div class="align-center flex flex-1 items-center justify-center gap-6">
+	<div class="align-center flex flex-1 items-center justify-start gap-6">
 		<a href="/dashboard" aria-label="Dashboard" title="Dashboard">
 		  <Swords size={20}  color="red" strokeWidth={2} />
 			<!-- <div
