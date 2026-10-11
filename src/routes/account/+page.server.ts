@@ -18,8 +18,23 @@ export const load: PageServerLoad = async ({ locals }) => {
     };
   }
 
+  const { data: subscriptionPlans, error: subscriptionPlansError } = await locals.supabase
+    .from('subscription_plans')
+    .select('*')
+
+  if (subscriptionPlansError) {
+    console.error('Error fetching subscription plans:', subscriptionPlansError);
+    return {
+      user: locals.user,
+      paymentMethods: paymentMethods ?? [],
+      subscriptionPlans: [],
+      error: subscriptionPlansError.message,
+    };
+  }
+
   return {
     user: locals.user,
     paymentMethods: paymentMethods ?? [],
+    subscriptionPlans: subscriptionPlans ?? [],
   };
 };

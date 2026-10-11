@@ -66,6 +66,7 @@ export type MemberRecord = {
   admin: boolean;
   pfp: string;
   metadata: MemberMetadata;
+  subscription_plan?: string; // FK -> subscription_plans.id
   created_at?: string | null;
   updated_at?: string | null;
 };

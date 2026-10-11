@@ -14,7 +14,7 @@
 	// Utils
 
 	// Components
-	import AddressForm from '../AddressForm.svelte';
+	import AddressForm from '../forms/AddressForm.svelte';
 	import PhoneInput from '$lib/components/global/PhoneInput.svelte';
 
 	// Data

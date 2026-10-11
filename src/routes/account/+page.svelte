@@ -20,15 +20,15 @@
 	const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5174';
 
 	// Components
-	// import AddressForm from './components/AddressForm.svelte';
 	import GeneralTab from './components/tabs/GeneralTab.svelte';
 	import SecurityTab from './components/tabs/SecurityTab.svelte';
 	import PaymentMethodsTab from './components/tabs/PaymentMethodsTab.svelte';
 
 	// Data
-	const supabase = $derived($page.data.supabase), user = $derived($page.data.user), payment_methods = $derived($page.data.paymentMethods);
-	import { countries } from '$lib/assets/data/countries';
-	import { states } from '$lib/assets/data/states';
+	const supabase = $derived($page.data.supabase),
+	      user = $derived($page.data.user),
+				payment_methods = $derived($page.data.paymentMethods),
+				subscription_plans = $derived($page.data.subscriptionPlans);
 
 	// Debug:
 	// svelte-ignore state_referenced_locally
@@ -37,6 +37,7 @@
 	// console.log('Account page - payment methods:', payment_methods)
 	// console.log('Account page - member:', $member);
 	// console.log('Account page - member.addresses:', $member?.addresses);
+	// console.log('Account page - subscription plans:', subscription_plans);
 
   // lifecycle
   import { onMount, onDestroy, tick } from 'svelte';
@@ -44,30 +45,23 @@
 	import { error } from '@sveltejs/kit';
 
 	// Stores:
+	// -- Addresses
   import {
-    addressesStore,
     addresses as userAdresses,
-    createAddress,
-    updateAddress,
-    deleteAddress,
-    setPrimaryAddress
   } from '$lib/stores/addresses.svelte';
   import SubscriptionTab from './components/tabs/SubscriptionTab.svelte';
   import {
     member,
     initMemberStore
   } from '$lib/stores/member.svelte';
-  // PaymentMethods store
+  // -- PaymentMethods
   import {
-    paymentMethodsStore,
     paymentMethods as userPaymentMethods,
-    createPaymentMethod,
-    updatePaymentMethod,
-    deletePaymentMethod,
-    setPrimaryPaymentMethod,
     initPaymentMethodsStore
   } from '$lib/stores/payment_methods.svelte';
-  // state
+	import { initSubscriptionPlansStore } from '$lib/stores/subscription_plans.svelte';
+
+  // State
   const dark_mode = $state(browser && window?.matchMedia && window?.matchMedia('(prefers-color-scheme: dark)').matches);
   const default_pfp =
 		'https://uqseuzmnwuthgorjvrdi.supabase.co/storage/v1/object/sign/img/Users/pfp_default.avif?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYTdiMWM0Zi0wNTYzLTRmZTQtYTA0Yy0wMmZiZWViYzYwOWQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWcvVXNlcnMvcGZwX2RlZmF1bHQuYXZpZiIsImlhdCI6MTc2MzYxMTY0MywiZXhwIjoxNzk1MTQ3NjQzfQ.7f3p36JtVhzE3-5xeo5A9JlIizORlYAQxup3_R9Hayk';
@@ -154,12 +148,14 @@
     error: ''
   })
 
+  // Lifecycle
   onMount(async () => {
     // The member store is idempotent and is normally initialised by the root
     // layout; awaiting it here guarantees `$member` is populated for this user
     // (refreshing its data) without duplicating the realtime channel.
     await initMemberStore(user, supabase);
     await initPaymentMethodsStore(payment_methods, user, supabase);
+    await initSubscriptionPlansStore(subscription_plans, supabase);
   })
 
   $effect(() => {
@@ -191,15 +187,9 @@
   })
 
 
-
-
-  // lifecycle
-  // The member store is initialised in the root layout; it fetches the member
-  // and seeds the addresses / payment-method stores, so nothing to do here.
-
-
   // const addresses = addressesStore.fetchAddressesByUser(memberStore.Member?.id || '');
   let visibleAddresses = $derived($userAdresses ?? []);
+  // Debug:
   // console.log('Account page - visibleAddresses:', visibleAddresses);
 
 
@@ -508,6 +498,7 @@
     <SubscriptionTab
       {user}
       {supabase}
+      {subscription_plans}
       onsuccess={() => { handle_toast("User subscription updated successfully!", "success")}}
       onerror={() => { handle_toast("Error updating subscription!", "error") }}
     />
