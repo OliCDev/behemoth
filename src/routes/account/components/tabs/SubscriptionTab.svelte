@@ -61,7 +61,7 @@
   })
   // lifecycle
   // functions
-  const add_new_subscription_plan = async () => {}
+
   const validate_plan = () => {
     if(!state.create.subscriptionPlan.name) {
       state.create.error = 'Name is required.';
@@ -72,6 +72,11 @@
       return false;
     }
     return true;
+  }
+  const add_new_subscription_plan = async () => {
+    if(validate_plan()) {
+
+    }
   }
 </script>
 <div id="tab-payment" class={`${account_tab}`}>
@@ -108,7 +113,7 @@
                 </h3>
                 <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
                 <SubscriptionForm bind:subscriptionPlan={state.create.subscriptionPlan} editing={true} />
-                <div class="flex w-full flex-row gap-4 justify-end items-center mt-4">
+                <div class="ctr-action_row flex w-full flex-row gap-4 justify-end items-center mt-4">
                   <button
                     class={`${button_cancel}`}
                     onclick={() => {
