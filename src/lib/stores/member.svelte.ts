@@ -59,7 +59,7 @@ const createMemberStore = () => {
 		_userId = userId;
 		if (_userId) await fetchMember(_userId);
 		_setupRealtime();
-		console.log('Member store initialized', _userId ? `(user ${_userId})` : '(no user)');
+		console.log('Member store initialized', _userId ? `(user)` : '(no user)');
 	};
 
 	// ─── Metadata sync ───────────────────────────────────────────────────────────

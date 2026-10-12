@@ -36,7 +36,7 @@ const createAddressesStore = () => {
 			'Addresses store initialized with',
 			initialAddresses.length,
 			'items',
-			_userId ? `(scoped to user ${_userId})` : '(all users)'
+			_userId ? `(scoped to user)` : '(all users)'
 		);
 	};
 

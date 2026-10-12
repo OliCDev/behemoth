@@ -32,7 +32,7 @@ const createPaymentMethodsStore = () => {
 			'Payment methods store initialized with',
 			initialPaymentMethods.length,
 			'items',
-			_userId ? `(scoped to user ${_userId})` : '(all users)'
+			_userId ? `(scoped to user)` : '(all users)'
 		);
 	};
 

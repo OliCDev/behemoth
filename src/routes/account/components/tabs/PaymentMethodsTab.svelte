@@ -79,7 +79,7 @@ const state = $state({
   });
   let visiblePaymentMethods = $derived($userPaymentMethods ?? []);
   // Debug
-  console.log('PaymentMethodsTab - visiblePaymentMethods:', visiblePaymentMethods);
+  // console.log('PaymentMethodsTab - visiblePaymentMethods:', visiblePaymentMethods);
 
 
   // lifecycle
