@@ -27,36 +27,31 @@
     onerror = () => {}
   } = $props<{ user: User, supabase: any, subscription_plans: SubscriptionPlan[], onsuccess: () => void, onerror: () => void }>();
   // state
-
+  let emptyPlan = () => {
+    return {
+      name: '',
+      description: '',
+      price: 0,
+      currency: 'USD',
+      billing_interval: 'month',
+      start_date: null,
+      end_date: null,
+      square_plan_id: null,
+      square_plan_variation_id: null,
+    } as SubscriptionPlan
+  }
   const state = $state({
     create: {
       open: false,
-      subscriptionPlan: {
-        name: '',
-        description: '',
-        price: 0,
-        currency: 'USD' as 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR',
-        billing_interval: 'month',
-        start_date: null as string | null,
-        end_date: null as string | null
-      }
+      subscriptionPlan: emptyPlan()
     },
     update: {
       open: false,
-      subscriptionPlan: {
-        name: '',
-        description: '',
-        price: 0,
-        currency: 'USD' as 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CNY' | 'INR',
-        billing_interval: 'month',
-        start_date: null as string | null,
-        end_date: null as string | null
-      }
+      subscriptionPlan: emptyPlan()
     },
     delete: {
       open: false,
       subscriptionPlan: {
-
         id: null as string | null,
       }
     }
@@ -98,7 +93,7 @@
                   Add new Subscription Plan
                 </h3>
                 <hr class="w-full mb-8 h-px bg-mist-700 dark:bg-mist-300 border-t-mist-300  dark:border-t-mist-600 border-t ">
-                <!-- <SubscriptionForm bind:subscriptionPlan={state.create.subscriptionPlan} editing={true} /> -->
+                <SubscriptionForm bind:subscriptionPlan={state.create.subscriptionPlan} editing={true} />
                 <div class="flex w-full flex-row gap-4 justify-end items-center mt-4">
                   <button
                     class={`${button_cancel}`}
@@ -109,7 +104,7 @@
                     Cancel
                   </button>
                   <button
-                    class={button_1}
+                    class="{button_1} cursor-pointer"
                     onclick={add_new_subscription_plan}
                   >
                     Add Plan

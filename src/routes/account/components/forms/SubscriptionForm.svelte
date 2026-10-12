@@ -171,49 +171,49 @@
     </div>
     <div class="w-full flex flex-col justify-start items-start gap-1">
       <Label>Description</Label>
+      <!-- // bind:value={state.jodit.content.html} -->
       <textarea
         bind:this={descriptionEditorEl}
-        // bind:value={state.jodit.content.html}
         bind:value={subscriptionPlan.description}
       ></textarea>
     </div>
-    <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
-      <Label>Price</Label>
-      <input
-        id="price"
-        type="number"
-        bind:value={subscriptionPlan.price}
-        class={input_class}
-      />
-    </div>
-    <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
-      <Label>Currency</Label>
-      <Select
-        id="currency"
-        bind:value={subscriptionPlan.currency}
-        class={input_class}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="CAD">CAD</option>
-        <option value="AUD">AUD</option>
-        <option value="JPY">JPY</option>
-        <option value="CNY">CNY</option>
-        <option value="INR">INR</option>
-      </Select>
-    </div>
-    <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
-      <Label>Billing Interval</Label>
-      <Select
-        id="billing_interval"
-        bind:value={subscriptionPlan.billing_interval}
-        class={input_class}
-      >
-        <option value="week">Week</option>
-        <option value="month">Month</option>
-        <option value="year">Year</option>
-      </Select>
+    <div class="w-full flex flex-row justify-start items-center gap-4">
+      <div class="w-full lg:w-1/2 flex flex-row justify-start items-end gap-1">
+        <div class="w-16 flex flex-col">
+          <Label>Price</Label>
+          <Select
+            id="currency"
+            bind:value={subscriptionPlan.currency}
+            class={`text-xs mt-1`}
+          >
+            <option value="USD">$</option>
+            <option value="EUR">€</option>
+            <option value="GBP">£</option>
+            <option value="CAD">CA$</option>
+            <option value="AUD">AU$</option>
+            <option value="JPY">J¥</option>
+            <option value="CNY">C¥</option>
+            <option value="INR">₹</option>
+          </Select>
+        </div>
+        <input
+          id="price"
+          type="number"
+          bind:value={subscriptionPlan.price}
+          class="{input_class} mb-1"
+        />
+      </div>
+      <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
+        <Label>Billing Interval</Label>
+        <Select
+          id="billing_interval"
+          bind:value={subscriptionPlan.billing_interval}
+        >
+          <option value="week">Week</option>
+          <option value="month">Month</option>
+          <option value="year">Year</option>
+        </Select>
+      </div>
     </div>
   </div>
 </div>
