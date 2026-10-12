@@ -43,14 +43,17 @@
   const state = $state({
     create: {
       open: false,
+      error: '' as string | null,
       subscriptionPlan: emptyPlan()
     },
     update: {
       open: false,
+      error: '' as string | null,
       subscriptionPlan: emptyPlan()
     },
     delete: {
       open: false,
+      error: '' as string | null,
       subscriptionPlan: {
         id: null as string | null,
       }
@@ -59,6 +62,17 @@
   // lifecycle
   // functions
   const add_new_subscription_plan = async () => {}
+  const validate_plan = () => {
+    if(!state.create.subscriptionPlan.name) {
+      state.create.error = 'Name is required.';
+      return false;
+    }
+    if(!state.create.subscriptionPlan.price || state.create.subscriptionPlan.price <= 0) {
+      state.create.error = 'Price must be greater than 0.';
+      return false;
+    }
+    return true;
+  }
 </script>
 <div id="tab-payment" class={`${account_tab}`}>
 
@@ -109,6 +123,15 @@
                   >
                     Add Plan
                   </button>
+                </div>
+                <div class="w-full flex flex-row justify-end items-end">
+                  {#if state.create.error}
+                    <span class="text-xs text-red-600 m-2">{state.create.error}</span>
+                    {:else if state.update.error}
+                    <span class="text-xs text-red-600 m-2">{state.update.error}</span>
+                    {:else if state.delete.error}
+                    <span class="text-xs text-red-600 m-2">{state.delete.error}</span>
+                  {/if}
                 </div>
               </div>
             </Modal>
