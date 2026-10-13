@@ -178,13 +178,13 @@
       ></textarea>
     </div>
     <div class="w-full flex flex-row justify-start items-center gap-4">
-      <div class="w-full lg:w-1/2 flex flex-row justify-start items-end gap-1">
+      <div class="w-full lg:w-1/2 flex flex-row justify-end items-end gap-1">
         <div class="w-16 flex flex-col">
           <Label>Price</Label>
-          <Select
+          <select
             id="currency"
             bind:value={subscriptionPlan.currency}
-            class={`text-xs mt-1`}
+            class={`${input_class} mt-1`}
           >
             <option value="USD">$</option>
             <option value="EUR">€</option>
@@ -194,25 +194,26 @@
             <option value="JPY">J¥</option>
             <option value="CNY">C¥</option>
             <option value="INR">₹</option>
-          </Select>
+          </select>
         </div>
         <input
           id="price"
           type="number"
           bind:value={subscriptionPlan.price}
-          class="{input_class} mb-1"
+          class="{input_class}"
         />
       </div>
       <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
         <Label>Billing Interval</Label>
-        <Select
+        <select
           id="billing_interval"
           bind:value={subscriptionPlan.billing_interval}
+          class={`${input_class}`}
         >
           <option value="week">Week</option>
           <option value="month">Month</option>
           <option value="year">Year</option>
-        </Select>
+        </select>
       </div>
     </div>
   </div>
