@@ -329,14 +329,14 @@
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Personal Information</h3>
     </div>
     <div class="w-full lg:w-3/4 flex flex-col">
-      <div class="w-full flex flex-col lg:flex-row gap-4 mb-4">
+      <div class="w-full flex flex-col lg:flex-row gap-4 mb-2">
         <div class="w-full lg:w-2/3 flex flex-col justify-start items-start gap-1">
           <Label>Username</Label>
           <input
             id="username"
             type="text"
             bind:value={meta.data.username}
-            class={`${input_class} mb-4`}
+            class={`${input_class} mb-2`}
           />
         </div>
         <div class="w-full lg:w-1/3 flex flex-col justify-start items-start gap-1">
@@ -345,11 +345,11 @@
             id="pronouns"
             type="text"
             bind:value={meta.data.pronouns}
-            class={`${input_class} mb-4`}
+            class={`${input_class} mb-2`}
           />
         </div>
       </div>
-      <div class="w-full flex flex-col lg:flex-row gap-4 mb-4">
+      <div class="w-full flex flex-col lg:flex-row gap-4 mb-2">
         <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1">
           <Label>First Name</Label>
           <input
@@ -393,7 +393,7 @@
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Addresses</h3>
     </div>
     <div class="w-full lg:w-3/4">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
         {#if visibleAddresses.length > 0}
           {#each visibleAddresses as address, index}
             <div class={account_card_class}>
@@ -516,13 +516,15 @@
                   </div>
                 </Modal>
               </div>
-              <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold my-1">{address.label}</h4>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line1}</p>
-              {#if address.address_line2?.length}
-                <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.address_line2}</p>
-              {/if}
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.city}, {address.state} {address.postal_code}</p>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">{address.country}</p>
+              <div class="w-full flex flex-col px-2 pb-2 lg:pb-0">
+                <h4 class="text-neutral-800 text-sm dark:text-neutral-200 font-semibold my-1">{address.label}</h4>
+                <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">{address.address_line1}</p>
+                {#if address.address_line2?.length}
+                <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">{address.address_line2}</p>
+                {/if}
+                <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">{address.city}, {address.state} {address.postal_code}</p>
+                <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">{address.country}</p>
+              </div>
             </div>
           {/each}
         <!-- {:else}

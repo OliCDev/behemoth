@@ -392,12 +392,12 @@ const state = $state({
 </script>
 <div id="tab-payment" class="{account_tab}">
 
-  <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">
+  <div class="ctr-personal w-full flex flex-col lg:flex-row gap-2 mb-10">
     <div class="w-full lg:w-1/4 flex flex-col justify-start items-start p-2">
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Payment Methods</h3>
     </div>
     <div class="w-full lg:w-3/4 flex flex-col">
-      <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
         {#if visiblePaymentMethods.length > 0}
           {#each visiblePaymentMethods as paymentMethod, index}
             <div class={account_card_class}>
@@ -522,11 +522,13 @@ const state = $state({
                   </div>
                 </Modal>
               </div>
-              <h4 class="text-neutral-800 dark:text-neutral-200 font-semibold my-1">{paymentMethod.name}</h4>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">********* {paymentMethod.card_last4}</p>
-              <p class="text-neutral-600 dark:text-neutral-400 mb-0 leading-none">
-                {paymentMethod.card_exp_month} / {paymentMethod.card_exp_year}</p>
-              <div class="w-full flex flex-row justify-end items-end p-2">
+              <div class="w-full px-2 flex flex-col">
+                  <h4 class="text-neutral-800 text-sm dark:text-neutral-200 font-semibold my-1">{paymentMethod.name}</h4>
+                  <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">********* {paymentMethod.card_last4}</p>
+                  <p class="text-neutral-600 text-sm dark:text-neutral-400 mb-0 leading-none">
+                    {paymentMethod.card_exp_month} / {paymentMethod.card_exp_year}</p>
+              </div>
+              <div class="w-full flex flex-row justify-end items-end">
                 <i class="{card_brand(paymentMethod.card_brand.toLowerCase())} text-neutral-600 dark:text-neutral-400 text-3xl"></i>
               </div>
             </div>

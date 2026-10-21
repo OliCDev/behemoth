@@ -25,11 +25,11 @@
 
 <div class="flex flex-col gap-1 w-full">
   <div class="w-full flex flex-row gap-1">
-    <div class="w-2/5">
-      <select bind:value={phone_state.country} aria-label="Country" class={input_class}>
+    <div class="w-15 h-full flex flex-col justify-end items-end">
+      <select bind:value={phone_state.country} aria-label="Country" class={`${input_class} text-xs flex flex-1`}>
         <option value={null}>US</option>
         {#each countries as c (c.id)}
-          <option value={c.iso2}>{c.iso2} (+{c.dialCode})</option>
+          <option value={c.iso2} class="text-sm">{c.iso2} (+{c.dialCode})</option>
         {/each}
       </select>
     </div>

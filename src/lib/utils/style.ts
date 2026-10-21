@@ -12,7 +12,7 @@ export const checkbox_class = "rounded border-gray-300 text-amber-500 focus:ring
 // cards
 export const card_class = "rounded-lg bg-white/60 p-2 md:p-4 lg:p-6 shadow-xl dark:bg-white/10"
 // -- Account
-export const account_card_class = "account_card w-full flex flex-col justify-start items-start p-4 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-300 bg-fixed lg:from-30% lg:to-70% dark:from-mist-900 dark:to-mist-600"
+export const account_card_class = "account_card w-full flex flex-col justify-start items-start p-2 border border-neutral-100/20 rounded-md shadow-xl bg-linear-[80deg] from-mist-100 from-15% to-mist-300 bg-fixed lg:from-30% lg:to-70% dark:from-mist-900 dark:to-mist-600"
 export const account_new_item_class = "account_new_item w-full shadow-xl border border-dashed border-neutral-800/30 dark:border-neutral-100/20 rounded-md flex flex-col justify-end items-end"
 export const account_tab = "account_tab flex flex-col gap-4 w-full lg:w-[90%] mt-5 lg:mt-10 mb-20"
 

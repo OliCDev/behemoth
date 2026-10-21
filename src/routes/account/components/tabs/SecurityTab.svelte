@@ -67,7 +67,7 @@
 <div id="tab-security" class="{account_tab}">
 
   <!-- Password Update -->
-  <div class="ctr-personal w-full flex flex-col lg:flex-row gap-4 mb-10">
+  <div class="ctr-personal w-full flex flex-col lg:flex-row mb-10">
     <div class="w-full lg:w-1/4 flex flex-col justify-start items-start p-2">
       <h3 class="text-neutral-800 dark:text-neutral-200 text-lg">Update Password</h3>
     </div>
@@ -77,7 +77,7 @@
           <span>{security_state.error}</span>
         </Alert>
       {/if}
-      <div class="w-full flex flex-col mb-4 gap-4">
+      <div class="w-full flex flex-col mb-4 gap-2">
         <div class="w-full lg:w-1/2 flex flex-col justify-start items-start gap-1 mb-4">
           <Label>Current Password</Label>
           <input
