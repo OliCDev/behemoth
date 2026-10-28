@@ -13,7 +13,7 @@
   let {
     address = $bindable(),
     editing
-  } = $props<{ address: MemberAddress, editing: boolean }>();
+  }: { address: MemberAddress, editing: boolean } = $props();
 
   // Helpers
  import { input_class } from '$lib/utils/style';

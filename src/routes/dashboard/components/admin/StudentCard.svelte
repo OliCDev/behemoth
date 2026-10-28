@@ -12,7 +12,7 @@
     onupdate,
     onaction,
     invite_open = $bindable()
-  } = $props<{
+  }: {
     student: Member,
     selected: boolean,
     expanded: boolean,
@@ -21,7 +21,7 @@
     ondelete: (student: Member) => void,
     onupdate: (student: Member) => void,
     onaction: (student: Member) => void
-  }>();
+  } = $props();
 
   // Utils
   import { card_class, checkbox_class } from '$lib/utils/style';

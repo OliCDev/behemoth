@@ -12,8 +12,8 @@
   // props
   let {
     subscriptionPlan = $bindable(),
-    editing
-  } = $props<{ subscriptionPlan: SubscriptionPlan, editing: boolean }>();
+    editing: boolean = $bindable()
+  }: { subscriptionPlan: SubscriptionPlan, editing: boolean } = $props();
 
   // Helpers
  import { input_class } from '$lib/utils/style';

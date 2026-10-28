@@ -11,7 +11,9 @@
     supabase = $bindable(),
     onsuccess = () => {},
     onerror = () => {}
-  } = $props<{ user: User, supabase: any, onsuccess: () => void, onerror: () => void }>();
+  }: { user: User, supabase: any, onsuccess: () => void, onerror: () => void } = $props();
+
+
   // state
   const security_state = $state({
     error: '',

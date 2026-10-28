@@ -20,7 +20,7 @@
 	import { fade } from 'svelte/transition';
 
 	// form data from server
-	let { form } = $props<{ form?: any }>();
+	let { form } : { form?: any } = $props();
 
 	// error handlign and stuff
 	$effect(() => {

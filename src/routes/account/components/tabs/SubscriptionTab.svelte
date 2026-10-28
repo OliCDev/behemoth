@@ -25,7 +25,10 @@
     subscription_plans = $bindable(),
     onsuccess = () => {},
     onerror = () => {}
-  } = $props<{ user: User, supabase: any, subscription_plans: SubscriptionPlan[], onsuccess: () => void, onerror: () => void }>();
+  }: { user: User, supabase: any, subscription_plans: SubscriptionPlan[], onsuccess: () => void, onerror: () => void } = $props();
+
+
+
   // state
   let emptyPlan = () => {
     return {

@@ -32,9 +32,9 @@
   let {
     user = $bindable(),
     supabase = $bindable(),
-    onsuccess = () => {},
-    onerror = () => {}
-  } = $props<{ user: User, supabase: any, onsuccess: () => void, onerror: () => void }>();
+    onsuccess,
+    onerror
+  }: { user: User, supabase: any, onsuccess: () => void, onerror: () => void } = $props();
 
 
   // store
@@ -198,7 +198,8 @@
         let res = await result.json();
         console.log('User account updated successfully: ', res  );
 
-        onsuccess("green", general_state.success);
+        // onsuccess("green", general_state.success);
+        onsuccess()
   			await tick();
         // Sync the freshly persisted auth metadata into the store so other
         // views (navbar, account header) reflect the change without a reload.
@@ -225,7 +226,8 @@
   			general_state.error = 'Error updating user account!';
   			general_state.success = '';
 
-        onerror("red", general_state.error);
+        // onerror("red", general_state.error);
+        onerror()
   			await tick();
   			setTimeout(() => {
   				meta.error = '';

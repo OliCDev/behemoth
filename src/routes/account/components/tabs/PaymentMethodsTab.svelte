@@ -33,7 +33,7 @@
     supabase = $bindable(),
     onsuccess = () => {},
     onerror = () => {}
-  } = $props<{ user: User, supabase: any, onsuccess: () => void, onerror: () => void }>();
+  }: { user: User, supabase: any, onsuccess: () => void, onerror: () => void } = $props();
 
 
   // Debug
@@ -352,7 +352,8 @@ const state = $state({
                 // close modal:
                 setTimeout(() => {
                   state.create.paymentMethod.open = false;
-                  onsuccess("green", state.success);
+                  // onsuccess("green", state.success);
+                  onsuccess()
                   state.success = '';
                 }, 1000);
 
