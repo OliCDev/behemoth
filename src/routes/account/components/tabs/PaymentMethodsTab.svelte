@@ -41,7 +41,6 @@
 
   // Stores:
   import {
-    paymentMethodsStore,
     paymentMethods as userPaymentMethods,
     createPaymentMethod,
     updatePaymentMethod,

@@ -27,7 +27,15 @@
     onerror = () => {}
   }: { user: User, supabase: any, subscription_plans: SubscriptionPlan[], onsuccess: () => void, onerror: () => void } = $props();
 
-
+  // Store
+  import {
+    subscriptionPlansStore,
+    fetchSubscriptionPlans,
+    createSubscriptionPlan,
+    updateSubscriptionPlan,
+    deleteSubscriptionPlan,
+    cleanupSubscriptionPlansStore
+  } from '$lib/stores/subscription_plans.svelte'
 
   // state
   let emptyPlan = () => {
@@ -78,7 +86,15 @@
   }
   const add_new_subscription_plan = async () => {
     if(validate_plan()) {
-
+      const res = await createSubscriptionPlan(state.create.subscriptionPlan);
+      if(res.success) {
+        state.create.open = false;
+        state.create.subscriptionPlan = emptyPlan();
+        state.create.error = '';
+        onsuccess();
+      } else {
+        state.create.error = res.error || 'An error occurred while creating the subscription plan.';
+      }
     }
   }
 </script>

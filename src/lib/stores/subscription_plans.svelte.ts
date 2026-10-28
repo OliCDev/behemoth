@@ -118,10 +118,10 @@ const createSubscriptionPlansStore = () => {
 		}
 	};
 
-	// Creates or updates the Square SUBSCRIPTION_PLAN and its
-	// SUBSCRIPTION_PLAN_VARIATION, then saves the resulting Square IDs on the
-	// Supabase row. Any missing Square object is (re)created, so calling this on
-	// a plan whose earlier sync failed will repair it.
+/* 	Creates or updates the Square SUBSCRIPTION_PLAN and its
+	SUBSCRIPTION_PLAN_VARIATION, then saves the resulting Square IDs on the
+	Supabase row. Any missing Square object is (re)created, so calling this on
+	a plan whose earlier sync failed will repair it. */
 	const _syncToSquare = async (
 		plan: SubscriptionPlan,
 		{ syncPlan = true, syncVariation = true } = {}
